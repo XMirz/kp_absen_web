@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'auth:sanctum'], function () {
+  Route::get('/user', function (Request $request) {
+    return Response::json($request->user(), 200);
+  });
+  Route::get('/configdata', [ApiConfigurationController::class, 'index']);
 });
+Route::post('/sanctum/token', [AuthenticationController::class, 'store']);

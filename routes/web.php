@@ -16,16 +16,26 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+  return Inertia::render('Welcome', [
+    'canLogin' => Route::has('login'),
+    'canRegister' => Route::has('register'),
+    'laravelVersion' => Application::VERSION,
+    'phpVersion' => PHP_VERSION,
+  ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+Route::group(['middleware' => 'auth'], function () {
+  Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+  })->name('dashboard');
+  Route::resource('/staffs', StaffController::class)->names('staffs');
+
+
+
+
+  Route::group(['prefix' => '/settings'],  function () {
+    Route::get('/', [SettingController::class, 'index']);
+  });
+});
+require __DIR__ . '/auth.php';
