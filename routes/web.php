@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
   Route::group(['prefix' => '/settings'],  function () {
-    Route::get('/', [SettingController::class, 'index']);
+    Route::get('/', [SettingController::class, 'index'])->name('settings.index');
   });
 });
 require __DIR__ . '/auth.php';

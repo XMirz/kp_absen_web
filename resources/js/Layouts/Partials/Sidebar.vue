@@ -2,11 +2,11 @@
 import { computed } from "vue";
 import NavLink from "@/Components/NavLink.vue";
 import { usePage } from "@inertiajs/inertia-vue3";
-const { user } = computed(() => usePage().props);
+const { user } = usePage().props.value.auth;
 const avatarUrl = computed(
   () =>
     "https://ui-avatars.com/api/?background=0D8ABC&color=fff&size=96&name=" +
-    "as"
+    user.name
 );
 </script>
 <template>
@@ -14,10 +14,14 @@ const avatarUrl = computed(
     class="bg-white border-black/15 shadow-black/10 shadow-md border-r w-72 py-8 !h-screen font-inter">
     <div class="flex h-full flex-col">
       <div class="flex-1 space-y-6">
-        <div class="px-2 flex flex-row">
-          <img class="rounded-full w-14 h-14" alt="" :src="avatarUrl" />
+        <div
+          class="px-2 flex flex-col gap-2 justify-center text-center items-center">
+          <img class="rounded-full w-12 h-12" alt="" :src="avatarUrl" />
           <div class="">
-            <h1>{{}}</h1>
+            <h6 class="">{{ user.name }}</h6>
+            <h6 class="text-gray-600 text-sm">
+              {{ user.role == "staff" ? "Pegawai" : "Kepala Bagian" }}
+            </h6>
           </div>
         </div>
         <div class="px-2 font-medium space-y-2 w-full">
@@ -46,8 +50,6 @@ const avatarUrl = computed(
             :active="route().current('*settings*')">
             Pengaturan</NavLink
           >
-          {{ user }}
-          <!-- {{ usePage().props.value.auth.user }} -->
         </div>
       </div>
       <!-- Bottom -->

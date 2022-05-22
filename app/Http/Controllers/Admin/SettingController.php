@@ -15,7 +15,7 @@ class SettingController extends Controller
    */
   public function index()
   {
-    return Inertia::render('Settings/Index');
+    return Inertia::render('Settings/Index', ['pantek' => 'kau']);
   }
 
   /**
