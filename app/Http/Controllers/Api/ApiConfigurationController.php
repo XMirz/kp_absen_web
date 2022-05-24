@@ -18,6 +18,7 @@ class ApiConfigurationController extends Controller
       'latitude' => $config->firstWhere('name', 'latitude')->value,
       'longitude' => $config->firstWhere('name', 'longitude')->value,
       'location' => $config->firstWhere('name', 'location')->value,
+      'eligible' => true,
       'today' => $today->translatedFormat('l, d M Y'),
     ];
     return response()->json($response, 200);

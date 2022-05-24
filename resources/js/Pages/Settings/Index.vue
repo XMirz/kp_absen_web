@@ -8,6 +8,6 @@ import { Head } from "@inertiajs/inertia-vue3";
 
   <DashboardLayout>
     <div class="">Ini halaman anu coek</div>
-    {{ $page.props }}
+    {{}}
   </DashboardLayout>
 </template>

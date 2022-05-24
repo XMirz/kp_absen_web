@@ -1,6 +1,8 @@
 <script setup>
 import { Link } from "@inertiajs/inertia-vue3";
 import Sidebar from "@/Layouts/Partials/Sidebar.vue";
+
+const props = defineProps({ title: String });
 </script>
 
 <template>
@@ -15,9 +17,20 @@ import Sidebar from "@/Layouts/Partials/Sidebar.vue";
 
       <!-- Page Content -->
       <Sidebar />
-      <main>
-        <slot />
-      </main>
+      <div class="flex flex-col w-full">
+        <!-- Header -->
+        <div
+          class="bg-white w-full shadow-sm flex flex-row items-center px-8 py-4">
+          <div class="">
+            <h1 class="font-sans text-2xl font-semibold">
+              {{ props.title }}
+            </h1>
+          </div>
+        </div>
+        <main class="flex flex-col space-y-8 px-8 py-4">
+          <slot />
+        </main>
+      </div>
     </div>
   </div>
 </template>

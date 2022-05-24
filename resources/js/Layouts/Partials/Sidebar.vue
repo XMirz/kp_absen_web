@@ -11,7 +11,7 @@ const avatarUrl = computed(
 </script>
 <template>
   <aside
-    class="bg-white border-black/15 shadow-black/10 shadow-md border-r w-72 py-8 !h-screen font-inter">
+    class="bg-white border-black/15 shadow-black/10 shadow-md border-r w-72 min-w-[18rem] py-8 !h-screen font-inter">
     <div class="flex h-full flex-col">
       <div class="flex-1 space-y-6">
         <div
@@ -35,13 +35,13 @@ const avatarUrl = computed(
             :active="route().current('*staff*')">
             Pegawai</NavLink
           >
-          <NavLink
+          <!-- <NavLink
             :href="route('staffs.index')"
             :active="route().current('*events*')">
             Jadwal Kegiatan</NavLink
-          >
+          > -->
           <NavLink
-            :href="route('staffs.index')"
+            :href="route('presences.index')"
             :active="route().current('*presence*')">
             Absensi</NavLink
           >

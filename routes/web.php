@@ -33,10 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
     return Inertia::render('Dashboard');
   })->name('dashboard');
   Route::resource('/staffs', StaffController::class)->names('staffs');
-
-
-
-
+  Route::resource('/presences', StaffController::class)->names('presences');
   Route::group(['prefix' => '/settings'],  function () {
     Route::get('/', [SettingController::class, 'index'])->name('settings.index');
   });
