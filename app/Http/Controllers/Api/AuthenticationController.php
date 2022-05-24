@@ -6,10 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 
 class AuthenticationController extends Controller
 {
+  public function index(Request $request)
+  {
+    $user = $request->user();
+    $user->role = $user->role == 'staff' ? 'Karyawan' : 'Kepala Bagian';
+    return Response::json($user, 200);
+  }
   public function store(Request $request)
   {
     $request->validate([
