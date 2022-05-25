@@ -14,7 +14,8 @@ class AuthenticationController extends Controller
   public function index(Request $request)
   {
     $user = $request->user();
-    $user->role = $user->role == 'staff' ? 'Karyawan' : 'Kepala Bagian';
+    $role = User::find($user->id)->first()->getRoleNames()->first();
+    $user->role = $role == 'staff' ? 'Karyawan' : 'Kepala Bagian';
     return Response::json($user, 200);
   }
   public function store(Request $request)

@@ -11,7 +11,7 @@ const avatarUrl = computed(
 </script>
 <template>
   <aside
-    class="bg-white border-black/15 shadow-black/10 shadow-md border-r w-72 min-w-[18rem] py-8 !h-screen font-inter">
+    class="bg-white border-black/15 shadow-black/10 shadow-md border-r w-72 min-w-[18rem] py-8 !h-screen font-inter relative z-10">
     <div class="flex h-full flex-col">
       <div class="flex-1 space-y-6">
         <div
@@ -49,6 +49,9 @@ const avatarUrl = computed(
             :href="route('settings.index')"
             :active="route().current('*settings*')">
             Pengaturan</NavLink
+          >
+          <NavLink :href="route('logout')" method="post" as="button"
+            >Keluar</NavLink
           >
         </div>
       </div>
