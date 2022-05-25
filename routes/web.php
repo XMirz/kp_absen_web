@@ -2,8 +2,7 @@
 
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StaffController;
-use App\Models\User;
-use Carbon\Carbon;
+use App\Http\Controllers\Admin\PresenceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,7 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
     return Inertia::render('Dashboard');
   })->name('dashboard');
   Route::resource('/staffs', StaffController::class)->names('staffs');
-  Route::resource('/presences', StaffController::class)->names('presences');
+  Route::resource('/presences', PresenceController::class)->names('presences');
   Route::group(['prefix' => '/settings'],  function () {
     Route::get('/', [SettingController::class, 'index'])->name('settings.index');
   });

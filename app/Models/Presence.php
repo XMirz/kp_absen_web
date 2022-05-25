@@ -7,5 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Presence extends Model
 {
-    use HasFactory;
+  use HasFactory;
+  protected $guarded = ['id'];
+  protected $casts = [
+    'inArea' => 'boolean',
+  ];
 }

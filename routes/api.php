@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ApiConfigurationController;
+use App\Http\Controllers\Api\ApiPresenceController;
 use App\Http\Controllers\Api\AuthenticationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+  Route::post('/presence', [ApiPresenceController::class, 'store']);
+  Route::patch('/presence/{presence}', [ApiPresenceController::class, 'update']);
   Route::get('/user', [AuthenticationController::class, 'index']);
   Route::get('/configdata', [ApiConfigurationController::class, 'index']);
 });
