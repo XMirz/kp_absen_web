@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Auth;
+use Exception;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -35,5 +37,29 @@ class AuthenticationController extends Controller
     }
 
     return response()->json(['token' => $user->createToken($request->device_name)->plainTextToken], 200);
+  }
+
+  // Handle update password
+  public function update(Request $request)
+  {
+    if (Hash::check($request->oldPassword, Auth::user()->password) == true) {
+      $user = Auth::user();
+      $user->password = Hash::make($request->newPassword);
+      $user->update();
+      // $user->tokens()->delete();
+      return response()->json([
+        'status' => 'success',
+        'statusCode' => 200,
+      ], 200);
+    }
+    return response()->json([
+      'statusCode' => 403,
+      'status' => 'wrong-old-password',
+    ], 200);
+  }
+  public function destroy(Request $request)
+  {
+    $request->user()->currentAccessToken()->delete();
+    return response()->json([], 200);
   }
 }

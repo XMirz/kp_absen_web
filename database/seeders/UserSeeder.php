@@ -22,54 +22,48 @@ class UserSeeder extends Seeder
   }
   public function run()
   {
-    User::create([
-      'name' => 'Hafez Almirza',
-      'profile' => 'anu',
-      'address' => 'anu',
-      'email' => 'a@gmail.com',
-      'password' => Hash::make(1),
-    ])->assignRole('chief');
-
     $staffs = [
       [
+        'name' => 'Hafez Almirza',
+        'email' => 'a@gmail.com',
+        'password' => Hash::make(1),
+      ],
+      [
         'name' => 'XMirz',
-        'profile' => 'belum Bang',
-        'address' => 'Belum',
-        'role' => 'staff',
         'email' => 'x@gmail.com',
         'password' => Hash::make(1),
       ],
       [
         'name' => 'Ahmad Paisal',
-        'address' => 'Pekanbaru',
-        'profile' => 'anu',
         'email' => 'paisul@gmail.com',
         'password' => Hash::make(1),
       ], [
         'name' => 'Deny Ardianto',
         'address' => 'Pekanbaru',
-        'profile' => 'anu',
         'email' => 'deny@gmail.com',
         'password' => Hash::make(1),
       ], [
         'name' => 'Isnan Melian Ramadhan',
-        'address' => 'Pekanbaru',
-        'profile' => 'anu',
         'email' => 'isnan@gmail.com',
         'password' => Hash::make(1),
       ], [
         'name' => 'M. Ilham Habibie',
-        'address' => 'Pekanbaru',
-        'profile' => 'anu',
         'email' => 'habibi@gmail.com',
         'password' => Hash::make(1),
       ]
     ];
 
     foreach ($staffs as $s) {
-      $s['nip'] = $this->faker->randomNumber(8) + $this->faker->randomNumber(8);
+      $s['nip'] = $this->faker->randomNumber(8) . $this->faker->randomNumber(8);
+      $s['gender'] = $this->faker->randomElement(['L', 'P']);
+      $s['address'] = $this->faker->address();
+      $s['birthDate'] = $this->faker->date();
       $staff = User::create($s);
-      $staff->assignRole('staff');
+      if (in_array($staff->id, [1, 2])) {
+        $staff->assignRole('chief');
+      } else {
+        $staff->assignRole('staff');
+      }
     }
   }
 }

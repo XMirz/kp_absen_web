@@ -21,6 +21,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   Route::post('/presence', [ApiPresenceController::class, 'store']);
   Route::patch('/presence/{presence}', [ApiPresenceController::class, 'update']);
   Route::get('/user', [AuthenticationController::class, 'index']);
+  Route::patch('/user/password', [AuthenticationController::class, 'update']);
   Route::get('/configdata', [ApiConfigurationController::class, 'index']);
+  Route::delete('/sanctum', [AuthenticationController::class, 'destroy']);
 });
 Route::post('/sanctum/token', [AuthenticationController::class, 'store']);
