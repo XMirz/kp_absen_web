@@ -23,6 +23,7 @@ class ApiConfigurationController extends Controller
       $eligiblePresence = $todayPresence->checkOutTime != null ? false : true;
     }
     $config = Configuration::all();
+    $presencesHistory = Presence::where('user_id', $userId)->latest()->limit(5)->get();
     $response = [
       'latitude' => $config->firstWhere('name', 'latitude')->value,
       'longitude' => $config->firstWhere('name', 'longitude')->value,
@@ -30,6 +31,7 @@ class ApiConfigurationController extends Controller
       'todayPresence' => $todayPresence ?? null,
       'eligible' => $eligiblePresence,
       'today' => $today->translatedFormat('l, d M Y'),
+      'presencesHistory' => $presencesHistory,
     ];
     return response()->json($response, 200);
   }
