@@ -8,6 +8,7 @@ use App\Models\Presence;
 use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Ramsey\Uuid\Type\Integer;
 
 class ApiConfigurationController extends Controller
 {
@@ -17,19 +18,25 @@ class ApiConfigurationController extends Controller
     $today = Carbon::now('+7');
     $todayPresence = Presence::where('user_id', $userId)->whereDay('checkInTime', $today)->latest()->first();
     // Check presence eligibility
+    // Check if current time beetween 8 and lessthan 16
+    $eligibleHours =  intval($today->translatedFormat('H')) > 7 && intval($today->translatedFormat('H')) < 16;
+    // Check today is not saturaday or monday
+    $eligibleDay = !in_array($today->translatedFormat('l'), ['Sabtu', 'Minggu']);
     if ($todayPresence == null) {
       $eligiblePresence = true;
     } else {
       $eligiblePresence = $todayPresence->checkOutTime != null ? false : true;
     }
+    $eligible = $eligibleDay && $eligiblePresence && $eligibleHours;
     $config = Configuration::all();
-    $presencesHistory = Presence::where('user_id', $userId)->latest()->limit(5)->get();
+    // Fetch latest presence except today
+    $presencesHistory = Presence::where('user_id', $userId)->latest()->whereDate('checkInTime', '!=', now('+7'))->limit(4)->get();
     $response = [
       'latitude' => $config->firstWhere('name', 'latitude')->value,
       'longitude' => $config->firstWhere('name', 'longitude')->value,
       'location' => $config->firstWhere('name', 'location')->value,
       'todayPresence' => $todayPresence ?? null,
-      'eligible' => $eligiblePresence,
+      'eligible' => $eligible,
       'today' => $today->translatedFormat('l, d M Y'),
       'presencesHistory' => $presencesHistory,
     ];
