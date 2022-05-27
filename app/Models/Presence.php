@@ -12,4 +12,16 @@ class Presence extends Model
   protected $casts = [
     'inArea' => 'boolean',
   ];
+
+  public function user()
+  {
+    return $this->belongsTo(User::class);
+  }
+
+
+  // public function getTodayStaffPresences(){
+  //   $staffs = User::all();
+  //   $
+
+  // }
 }

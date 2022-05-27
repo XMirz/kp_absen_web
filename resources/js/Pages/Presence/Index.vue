@@ -1,11 +1,16 @@
 <script setup>
+import moment from "moment";
 import DashboardLayout from "@/Layouts/DashboardLayout.vue";
 import { Head, usePage } from "@inertiajs/inertia-vue3";
 import Swal from "sweetalert2";
 import { TrashIcon } from "@heroicons/vue/outline";
 import DeleteButton from "@/Components/DeleteButton.vue";
 import NavLink from "@/Components/NavLink.vue";
-const staffs = usePage().props.value.presences;
+import { computed } from "vue";
+const staffsPresence = usePage().props.value.staffsPresence;
+const presences = usePage().props.value.presences;
+// change momentJS locale
+moment.locale("id");
 </script>
 
 <template>
@@ -15,31 +20,65 @@ const staffs = usePage().props.value.presences;
     <div
       class="bg-white flex flex-col space-y-4 px-8 py-4 w-full border-b shadow-md">
       <h1 class="font-sans text-xl font-semibold text-gray-700">
-        Daftar Pegawai Humas & Prokopim
+        Presensi Pegawai hari ini
       </h1>
+      <!-- {{ staffsPresence[1] }} -->
       <div class="overflow-x-auto w-full">
         <table class="table w-full">
-          <thead>
+          <thead class="text-center">
             <tr class="font-poppins">
-              <th scope="col" class="font-semibold">#</th>
-              <th scope="col" class="font-semibold">NIP</th>
-              <th scope="col" class="font-semibold">Nama</th>
-              <th scope="col" class="font-semibold">Alamat</th>
-              <th scope="col" class="font-semibold">Tanggal lahir</th>
-              <th scope="col" class="font-semibold">Aksi</th>
+              <th
+                scope="col"
+                rowspan="2"
+                class="font-semibold border-b-0 border-r border-black/10">
+                #
+              </th>
+              <th
+                scope="col"
+                rowspan="2"
+                class="font-semibold border-b-0 border-r border-black/10">
+                Nama pegawai
+              </th>
+              <th
+                scope="col"
+                rowspan="2"
+                class="font-semibold border-b-0 border-r border-black/10">
+                NIP
+              </th>
+              <th
+                scope="col"
+                colspan="3"
+                class="font-semibold border-b border-r border-black/10">
+                Presensi
+              </th>
+              <th scope="col" rowspan="2" class="font-semibold">Aksi</th>
+            </tr>
+            <tr class="font-poppins">
+              <th class="font-semibold border-b-0 border-r border-black/10">
+                Jenis
+              </th>
+              <th class="font-semibold border-b-0 border-r border-black/10">
+                Masuk
+              </th>
+              <th class="font-semibold border-b-0 border-r border-black/10">
+                Keluar
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(staff, index) in staffs" v-bind:key="index">
+            <tr v-for="(staff, index) in staffsPresence" v-bind:key="index">
               <td class="">
                 {{ index + 1 }}
               </td>
-              <td class="">{{ staff.nip ?? "" }}</td>
               <td class="">{{ staff.name }}</td>
+              <td class="">{{ staff.nip ?? "" }}</td>
+              <td class="">{{ todayPresenceStatus(staff.todayPresence) }}</td>
               <td class="">
-                {{ staff.address }}
+                {{ getCheckInOutTime(staff.todayPresence, "checkInTime") }}
               </td>
-              <td class="">{{ staff.birthDate }}</td>
+              <td class="">
+                {{ getCheckInOutTime(staff.todayPresence, "checkOutTime") }}
+              </td>
               <td>
                 <div class="flex flex-row justify-around">
                   <button
@@ -61,7 +100,37 @@ const staffs = usePage().props.value.presences;
 
 <script>
 export default {
+  // data() {
+  //   return {
+  //     moment: moment,
+  //   };
+  // },
+  computed: {},
+  mounted() {},
   methods: {
+    // Function to chceck and return status string;
+    todayPresenceStatus(presence) {
+      if (presence == null) {
+        return "Absen";
+      } else if (presence.checkInTime == null) {
+        return "Absen";
+      } else if (presence.inArea) {
+        return "Kantor";
+      } else {
+        return "Lapangan";
+      }
+    },
+    // Function to generate hourMinute for checkInOutTime
+    getCheckInOutTime(presence, time) {
+      if (presence == null) {
+        return "-";
+      }
+      if (presence[time] == null) {
+        return "-";
+      } else {
+        return moment(presence[time]).format("HH:mm");
+      }
+    },
     deleteRow(routes, id, title, subtitle, successTitle, successSubtitle) {
       Swal.fire({
         title: title ?? "Title",

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Presence;
+use App\Models\Staff;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,8 +17,12 @@ class PresenceController extends Controller
    */
   public function index()
   {
-    $presences = Presence::latest()->get();
-    return Inertia::render('Presence/Index', compact('presences'));
+    $staffsPresence = Staff::all();
+    $presences = [];
+    foreach ($staffsPresence as $staff) {
+      $staff->todayPresence = Presence::where('user_id', $staff->id)->whereDate('checkInTime', '=', now('+7')->format('Y-m-d'))->first();
+    }
+    return Inertia::render('Presence/Index', compact('staffsPresence', 'presences'));
   }
 
   /**
