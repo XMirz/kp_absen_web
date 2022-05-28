@@ -23,7 +23,7 @@ const props = defineProps({ title: String });
         <div
           class="bg-white w-full border-black/15 shadow-black/10 shadow-sm border-b flex flex-row items-center px-8 py-4 relative z-10">
           <div class="">
-            <h1 class="font-sans text-2xl font-semibold">
+            <h1 class="font-inter text-2xl text-blue-600 font-semibold">
               {{ props.title }}
             </h1>
           </div>

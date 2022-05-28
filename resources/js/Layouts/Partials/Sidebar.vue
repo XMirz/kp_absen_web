@@ -43,7 +43,7 @@ const avatarUrl = computed(
           <NavLink
             :href="route('presences.index')"
             :active="route().current('*presence*')">
-            Absensi</NavLink
+            Presensi</NavLink
           >
           <NavLink
             :href="route('settings.index')"

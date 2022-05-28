@@ -13,11 +13,11 @@ const staffs = usePage().props.value.staffs;
 
   <DashboardLayout title="Pegawai">
     <div
-      class="bg-white flex flex-col space-y-4 px-8 py-4 w-full border-b shadow-md">
+      class="bg-white flex flex-col space-y-4 px-8 py-8 w-full border-b shadow-md">
       <h1 class="font-sans text-xl font-semibold text-gray-700">
         Daftar Pegawai Humas & Prokopim
       </h1>
-      <div class="overflow-x-auto w-full">
+      <div class="overflow-x-auto w-full pb-4">
         <table class="table w-full">
           <thead>
             <tr class="font-poppins">
