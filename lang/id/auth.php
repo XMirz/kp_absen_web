@@ -12,9 +12,9 @@ return [
     | these language lines according to your application's requirements.
     |
     */
-  'unauthorized' => 'Anda tidak memiliki akses.',
-  'failed' => 'These credentials do not match our records.',
-  'password' => 'The provided password is incorrect.',
-  'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+
+  'failed' => 'Username atau kata sandi salah.',
+  'password' => 'Kata sandi yang anda masukkan salah.',
+  'throttle' => 'Terlalu banyak percobaan login. Silahkan coba lagi dalam :seconds detik',
 
 ];

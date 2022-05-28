@@ -2676,12 +2676,6 @@ body {
 .border-b-0 {
   border-bottom-width: 0px;
 }
-.border-r-2 {
-  border-right-width: 2px;
-}
-.border-r-0 {
-  border-right-width: 0px;
-}
 .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
@@ -2704,16 +2698,6 @@ body {
 .border-indigo-400 {
   --tw-border-opacity: 1;
   border-color: rgb(129 140 248 / var(--tw-border-opacity));
-}
-.border-black {
-  --tw-border-opacity: 1;
-  border-color: rgb(0 0 0 / var(--tw-border-opacity));
-}
-.border-black\/30 {
-  border-color: rgb(0 0 0 / 0.3);
-}
-.border-black\/20 {
-  border-color: rgb(0 0 0 / 0.2);
 }
 .border-black\/10 {
   border-color: rgb(0 0 0 / 0.1);
