@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Staff;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -27,7 +28,7 @@ class StaffController extends Controller
    */
   public function create()
   {
-    //
+    return Inertia::render('Staff/Create');
   }
 
   /**
@@ -38,7 +39,6 @@ class StaffController extends Controller
    */
   public function store(Request $request)
   {
-    //
   }
 
   /**
@@ -58,9 +58,9 @@ class StaffController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function edit($id)
+  public function edit(User $staff)
   {
-    //
+    return Inertia::render('Staff/Edit', compact('staff'));
   }
 
   /**

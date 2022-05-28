@@ -1,10 +1,11 @@
 <script setup>
 import DashboardLayout from "@/Layouts/DashboardLayout.vue";
-import { Head, usePage } from "@inertiajs/inertia-vue3";
+import { Head, Link, usePage } from "@inertiajs/inertia-vue3";
 import Swal from "sweetalert2";
-import { TrashIcon } from "@heroicons/vue/outline";
+import { TrashIcon, PlusSmIcon, PencilIcon } from "@heroicons/vue/outline";
 import DeleteButton from "@/Components/DeleteButton.vue";
-import NavLink from "@/Components/NavLink.vue";
+import ButtonLink from "@/Components/ButtonLink.vue";
+import SectionHeader from "@/Components/SectionHeader.vue";
 const staffs = usePage().props.value.staffs;
 </script>
 
@@ -12,16 +13,22 @@ const staffs = usePage().props.value.staffs;
   <Head title="Pegawai" />
 
   <DashboardLayout title="Pegawai">
-    <div
-      class="bg-white flex flex-col space-y-4 px-8 py-8 w-full border-b shadow-md">
-      <h1 class="font-sans text-xl font-semibold text-gray-700">
-        Daftar Pegawai Humas & Prokopim
-      </h1>
+    <section class="space-y-4 px-8 pb-8">
+      <SectionHeader :title="'Daftar Pegawai Humas & Prokopim'">
+        <ButtonLink
+          :href="route('staffs.create')"
+          :active="route().current('*staff*')">
+          <span class="flex flex-row gap-x-1 items-center"
+            ><PlusSmIcon class="h-5 w-5 px-0 mx-0 text-white-500" />Tambah
+            Data</span
+          >
+        </ButtonLink></SectionHeader
+      >
       <div class="overflow-x-auto w-full pb-4">
         <table class="table w-full">
           <thead>
             <tr class="font-poppins">
-              <th scope="col" class="font-semibold">#</th>
+              <th scope="col" class="!static font-semibold">#</th>
               <th scope="col" class="font-semibold">NIP</th>
               <th scope="col" class="font-semibold">Nama</th>
               <th scope="col" class="font-semibold">Alamat</th>
@@ -41,13 +48,18 @@ const staffs = usePage().props.value.staffs;
               </td>
               <td class="">{{ staff.birthDate }}</td>
               <td>
-                <div class="flex flex-row justify-around">
+                <div class="flex flex-row gap-x-1 ustify-around">
+                  <Link
+                    class="py-2 px-2 bg-gray-500 cursor-pointer rounded-md shadow-md"
+                    :href="route('staffs.edit', staff.id)">
+                    <PencilIcon class="h-5 w-5 text-white" />
+                  </Link>
                   <button
-                    class="py-2 px-2 cursor-pointer rounded-md shadow-md"
+                    class="py-2 px-2 bg-red-500 cursor-pointer rounded-md shadow-md"
                     @click="
                       deleteRow('', staff.id, 'Hapus ' + staff.name + ' ?')
                     ">
-                    <TrashIcon class="h-5 w-5 text-red-500" />
+                    <TrashIcon class="h-5 w-5 text-white" />
                   </button>
                 </div>
               </td>
@@ -55,7 +67,7 @@ const staffs = usePage().props.value.staffs;
           </tbody>
         </table>
       </div>
-    </div>
+    </section>
   </DashboardLayout>
 </template>
 

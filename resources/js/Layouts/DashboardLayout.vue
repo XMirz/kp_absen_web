@@ -28,7 +28,8 @@ const props = defineProps({ title: String });
             </h1>
           </div>
         </div>
-        <main class="space-y-8 w-full">
+        <main
+          class="bg-white flex flex-col space-y-4 py-8 w-full border-b shadow-md">
           <slot />
         </main>
       </div>

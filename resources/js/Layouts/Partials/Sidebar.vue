@@ -58,7 +58,7 @@ const avatarUrl = computed(
       <!-- Bottom -->
       <div class="font-poppins px-4 space-x-4 flex flex-row">
         <img
-          :src="'images/logo_kota_pekanbaru.png'"
+          :src="'/images/logo_kota_pekanbaru.png'"
           alt="Lambang kota pekanbaru"
           class="w-12 object-contain mx-auto" />
         <div class="">
