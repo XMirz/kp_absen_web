@@ -22929,13 +22929,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_SectionHeader_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/SectionHeader.vue */ "./resources/js/Components/SectionHeader.vue");
 /* harmony import */ var _Components_Input_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/Input.vue */ "./resources/js/Components/Input.vue");
 /* harmony import */ var _Components_Label_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/Label.vue */ "./resources/js/Components/Label.vue");
+/* harmony import */ var _inertiajs_progress__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @inertiajs/progress */ "./node_modules/.pnpm/@inertiajs+progress@0.2.7_@inertiajs+inertia@0.11.0/node_modules/@inertiajs/progress/dist/index.js");
 var __default__ = {
   methods: {
-    debug: function debug(thing) {
-      console.log(thing);
-    }
+    debug: function debug(thing) {}
   }
 };
+
 
 
 
@@ -22952,6 +22952,7 @@ var __default__ = {
     var staff = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.usePage)().props.value.staff;
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm)({
       name: staff.name,
+      role: staff.role,
       email: staff.email,
       profile: staff.profile,
       nip: staff.nip,
@@ -22961,9 +22962,9 @@ var __default__ = {
     });
 
     var submit = function submit() {
-      if (form.name != "" && form.email) {
-        form.post(route("staffs.update", staff), {});
-      }
+      form.patch(route("staffs.update", staff.id), {
+        onSuccess: function onSuccess() {}
+      });
     };
 
     var __returned__ = {
@@ -22978,7 +22979,8 @@ var __default__ = {
       Button: _Components_Button_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
       SectionHeader: _Components_SectionHeader_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
       Input: _Components_Input_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-      Label: _Components_Label_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
+      Label: _Components_Label_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+      InertiaProgress: _inertiajs_progress__WEBPACK_IMPORTED_MODULE_7__.InertiaProgress
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -23510,7 +23512,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/.pnpm/vue@3.2.35/node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "bg-gray-50 flex flex-row"
+  "class": "bg-white flex flex-row"
 };
 var _hoisted_2 = {
   "class": "flex flex-col justify-start items-start w-[calc(100vw-18rem)]"
@@ -23525,12 +23527,23 @@ var _hoisted_5 = {
   "class": "font-inter text-2xl text-blue-600 font-semibold"
 };
 var _hoisted_6 = {
-  "class": "bg-white flex flex-col space-y-4 py-8 w-full border-b shadow-md"
+  "class": "bg-white flex-1 flex flex-col space-y-4 py-8 w-full border-b shadow-sm"
 };
+
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("footer", {
+  "class": "w-full py-4"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "text-center font-semibold font-inter"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "text-blue-600"
+}, "Hafez Almirza"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" @ 2022")])])], -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Page Heading "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <header class=\"bg-white shadow\" v-if=\"$slots.header\">\n        <div class=\"max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8\">\n          <slot name=\"header\" />\n        </div>\n      </header> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Page Content "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Sidebar"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Header "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.title), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("main", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")])])])]);
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("main", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")]), _hoisted_7])])]);
 }
 
 /***/ }),
@@ -24704,7 +24717,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["SectionHeader"], {
-        title: 'Tambah data pegawai'
+        title: 'Perbarui data pegawai'
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
         onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.submit, ["prevent"]),
         "class": "flex flex-row gap-x-8"

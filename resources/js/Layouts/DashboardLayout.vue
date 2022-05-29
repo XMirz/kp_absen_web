@@ -7,7 +7,7 @@ const props = defineProps({ title: String });
 
 <template>
   <div>
-    <div class="bg-gray-50 flex flex-row">
+    <div class="bg-white flex flex-row">
       <!-- Page Heading -->
       <!-- <header class="bg-white shadow" v-if="$slots.header">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -29,9 +29,14 @@ const props = defineProps({ title: String });
           </div>
         </div>
         <main
-          class="bg-white flex flex-col space-y-4 py-8 w-full border-b shadow-md">
+          class="bg-white flex-1 flex flex-col space-y-4 py-8 w-full border-b shadow-sm">
           <slot />
         </main>
+        <footer class="w-full py-4">
+          <div class="text-center font-semibold font-inter">
+            <h6><span class="text-blue-600">Hafez Almirza</span> @ 2022</h6>
+          </div>
+        </footer>
       </div>
     </div>
   </div>

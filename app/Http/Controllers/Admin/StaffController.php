@@ -60,6 +60,8 @@ class StaffController extends Controller
    */
   public function edit(User $staff)
   {
+    // Ambil nama role staff
+    $staff->role = $staff->getRoleNames()->toArray()[0];
     return Inertia::render('Staff/Edit', compact('staff'));
   }
 
@@ -70,9 +72,26 @@ class StaffController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function update(Request $request, User $staff)
   {
-    //
+    $newStaffData = $request->validate([
+      'name' => 'required',
+      'email' => 'required',
+      'nip' => 'required',
+      'address' => 'required',
+      'gender' => 'required',
+      'birthDate' => 'required',
+    ]);
+
+    // Check if role is changed
+    $currentRole = $staff->getRoleNames()->first();
+    if ($request->role != $currentRole) {
+      $newStaffData['role'] = $request->role;
+    }
+
+    $staff->update($newStaffData);
+    // return response('', 200);
+    return redirect()->route('staffs.index');
   }
 
   /**

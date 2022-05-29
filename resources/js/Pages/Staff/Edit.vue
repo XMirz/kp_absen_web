@@ -6,10 +6,12 @@ import Button from "@/Components/Button.vue";
 import SectionHeader from "@/Components/SectionHeader.vue";
 import Input from "@/Components/Input.vue";
 import Label from "@/Components/Label.vue";
+import { InertiaProgress } from "@inertiajs/progress";
 ("@/Components/SectionHeader.vue");
 const staff = usePage().props.value.staff;
 const form = useForm({
   name: staff.name,
+  role: staff.role,
   email: staff.email,
   profile: staff.profile,
   nip: staff.nip,
@@ -18,10 +20,10 @@ const form = useForm({
   birthDate: staff.birthDate,
 });
 
-const submit = () => {
-  if (form.name != "" && form.email) {
-    form.post(route("staffs.update", staff), {});
-  }
+const submit = function () {
+  form.patch(route("staffs.update", staff.id), {
+    onSuccess: function () {},
+  });
 };
 </script>
 
@@ -30,7 +32,7 @@ const submit = () => {
 
   <DashboardLayout title="Pegawai">
     <section class="space-y-4 px-8">
-      <SectionHeader :title="'Tambah data pegawai'"></SectionHeader>
+      <SectionHeader :title="'Perbarui data pegawai'"></SectionHeader>
       <form @submit.prevent="submit" class="flex flex-row gap-x-8">
         <!-- Left -->
         <div class="flex-1 space-y-4">
@@ -103,9 +105,7 @@ const submit = () => {
 <script>
 export default {
   methods: {
-    debug(thing) {
-      console.log(thing);
-    },
+    debug(thing) {},
   },
 };
 </script>

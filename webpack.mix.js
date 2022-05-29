@@ -11,20 +11,27 @@ const mix = require("laravel-mix");
  |
  */
 
-mix.browserSync("127.0.0.1:8000");
+// mix.browserSync("127.0.0.1:8000");
 mix.disableSuccessNotifications();
 mix.disableNotifications();
-mix.js("resources/js/app.js", "public/js")
-    .vue()
-    .postCss("resources/css/app.css", "public/css", [
-        require("postcss-import"),
-        require("tailwindcss"),
-        require("autoprefixer"),
-    ])
-    .alias({
-        "@": "resources/js",
-    });
+mix.options({
+  hmrOptions: {
+    host: "localhost",
+    port: "8000",
+  },
+});
+mix
+  .js("resources/js/app.js", "public/js")
+  .vue()
+  .postCss("resources/css/app.css", "public/css", [
+    require("postcss-import"),
+    require("tailwindcss"),
+    require("autoprefixer"),
+  ])
+  .alias({
+    "@": "resources/js",
+  });
 
 if (mix.inProduction()) {
-    mix.version();
+  mix.version();
 }
