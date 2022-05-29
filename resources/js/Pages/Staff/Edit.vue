@@ -75,7 +75,7 @@ const submit = function () {
           </div>
           <div
             v-if="
-              user.roles[0].level < 2 &&
+              user.roles[0].level < 3 &&
               user.roles[0].level != staff.roles[0].level
             "
             class="">
@@ -89,7 +89,9 @@ const submit = function () {
               <option v-if="user.roles[0].level < 1" value="chief">
                 Kepala bagian
               </option>
-              <option value="admin">Administrator</option>
+              <option v-if="user.roles[0].level < 2" value="admin">
+                Administrator
+              </option>
               <option value="staff">Pegawai biasa</option>
             </select>
           </div>
