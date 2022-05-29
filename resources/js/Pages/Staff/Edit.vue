@@ -8,6 +8,7 @@ import Input from "@/Components/Input.vue";
 import Label from "@/Components/Label.vue";
 import { InertiaProgress } from "@inertiajs/progress";
 ("@/Components/SectionHeader.vue");
+const { user } = usePage().props.value.auth;
 const staff = usePage().props.value.staff;
 const form = useForm({
   name: staff.name,
@@ -22,7 +23,14 @@ const form = useForm({
 
 const submit = function () {
   form.patch(route("staffs.update", staff.id), {
-    onSuccess: function () {},
+    onSuccess: () => {
+      Swal.fire({
+        title: "Berhasil",
+        text: "Data pegawai diperbarui",
+        icon: "success",
+        closeOnClickOutside: false,
+      });
+    },
   });
 };
 </script>
@@ -60,14 +68,33 @@ const submit = function () {
               id="gender"
               name="gender"
               v-model="form.gender"
-              :onchange="debug(form.gender)"
               class="border-gray-300 focus:border-blue-300 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
               <option value="L">Laki-laki</option>
               <option value="P">Perempuan</option>
             </select>
           </div>
+          <div
+            v-if="
+              user.roles[0].level < 2 &&
+              user.roles[0].level != staff.roles[0].level
+            "
+            class="">
+            <Label for="role" value="Role" />
+            <select
+              id="role"
+              name="role"
+              v-model="form.role"
+              class="border-gray-300 focus:border-blue-300 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+              <!-- <option value="dev">Developer</option> -->
+              <option v-if="user.roles[0].level < 1" value="chief">
+                Kepala bagian
+              </option>
+              <option value="admin">Administrator</option>
+              <option value="staff">Pegawai biasa</option>
+            </select>
+          </div>
         </div>
-        <div class="flex-1 space-y-4">
+        <div class="flex-1 flex flex-col gap-y-4">
           <div class="">
             <Label for="email" value="Email" />
             <Input
@@ -93,7 +120,7 @@ const submit = function () {
               class="mt-1 block w-full"
               v-model="form.birthDate" />
           </div>
-          <div class="pt-3 flex flex-row justify-end">
+          <div class="flex flex-row mt-auto justify-end">
             <Button> Simpan</Button>
           </div>
         </div>

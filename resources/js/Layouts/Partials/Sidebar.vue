@@ -20,7 +20,7 @@ const avatarUrl = computed(
           <div class="">
             <h6 class="">{{ user.name }}</h6>
             <h6 class="text-gray-600 text-sm">
-              {{ user.role == "staff" ? "Pegawai" : "Kepala Bagian" }}
+              {{ user.roles[0].title }}
             </h6>
           </div>
         </div>

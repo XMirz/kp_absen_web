@@ -47,15 +47,14 @@ class LoginRequest extends FormRequest
     $this->ensureIsNotRateLimited();
 
     // Check if user has right role
-    $user = User::firstWhere('email', $this->email);
-    if ($user && !$user->hasRole(['chief', 'admin'])) {
-      // Auth::guard('web')->logout();
-      // $this->session()->invalidate();
-
-      // $this->session()->regenerateToken();
+    // dump($this->all());
+    $staff = User::where('email', '=', $this->email)->first();
+    // dump($staff);
+    if ($staff && !$staff->hasRole(['dev', 'chief', 'admin'])) {
       throw ValidationException::withMessages([
         'message' => trans('auth.unauthorized'),
       ]);;
+      return;
     }
 
 

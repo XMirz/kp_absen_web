@@ -37,8 +37,13 @@ class HandleInertiaRequests extends Middleware
   public function share(Request $request)
   {
     // Shared data
-    $user = User::find(auth()->user()->id);
-    $user->roles = $user->getRoleNames()->toArray();
+    $user = $request->user();
+    // // if logged in , update
+    // // dump($user);
+    if ($user) {
+      $user = User::where('id', auth()->user()->id)->with('roles')->first();
+    }
+    // dd($user);
     return array_merge(parent::share($request), [
       'auth' => [
         'user' => $user,

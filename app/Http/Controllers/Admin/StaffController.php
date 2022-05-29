@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Staff;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,7 +16,15 @@ class StaffController extends Controller
    */
   public function index()
   {
-    $staffs = Staff::all();
+
+    $user = User::where('id', auth()->user()->id)->first();
+    $rawStaffs = User::with('roles')->get();
+    // Filter dev role
+    $staffs = $rawStaffs->filter(function (User $staff) use ($user) {
+      if ($staff->roles()->first()->level != 0 || $user->roles()->first()->level == 0) {
+        return $staff;
+      }
+    })->values();
     return Inertia::render('Staff/Index', compact('staffs'));
   }
 
@@ -28,7 +35,8 @@ class StaffController extends Controller
    */
   public function create()
   {
-    return Inertia::render('Staff/Create');
+    $defaultPassword = 123123123;
+    return Inertia::render('Staff/Create', compact('defaultPassword'));
   }
 
   /**
@@ -39,6 +47,23 @@ class StaffController extends Controller
    */
   public function store(Request $request)
   {
+    $newStaffData = $request->validate([
+      'name' => 'required',
+      'email' => 'required',
+      'nip' => 'required',
+      'address' => 'required',
+      'gender' => 'required',
+      'birthDate' => 'required',
+      'role' => 'required',
+      'password' => 'required',
+    ]);
+
+    $user =  User::create($newStaffData);
+    if ($user) {
+      $user->assignRole($request->role);
+      return redirect()->route('staffs.index');
+    }
+    return back();
   }
 
   /**
@@ -86,7 +111,7 @@ class StaffController extends Controller
     // Check if role is changed
     $currentRole = $staff->getRoleNames()->first();
     if ($request->role != $currentRole) {
-      $newStaffData['role'] = $request->role;
+      $staff->syncRoles([$request->role]);
     }
 
     $staff->update($newStaffData);
@@ -102,7 +127,7 @@ class StaffController extends Controller
    */
   public function destroy($id)
   {
-    Staff::destroy($id);
-    return Inertia::location(route('staffs.index'));
+    User::destroy($id);
+    return redirect()->route('staffs.index');
   }
 }

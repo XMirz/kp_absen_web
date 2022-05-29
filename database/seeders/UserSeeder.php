@@ -24,12 +24,12 @@ class UserSeeder extends Seeder
   {
     $staffs = [
       [
-        'name' => 'Hafez Almirza',
-        'email' => 'a@gmail.com',
+        'name' => 'XMirz',
+        'email' => 'xmirz@gmail.com',
         'password' => Hash::make(1),
       ],
       [
-        'name' => 'XMirz',
+        'name' => 'Hafez Almirza',
         'email' => 'x@gmail.com',
         'password' => Hash::make(1),
       ],
@@ -39,7 +39,6 @@ class UserSeeder extends Seeder
         'password' => Hash::make(1),
       ], [
         'name' => 'Deny Ardianto',
-        'address' => 'Pekanbaru',
         'email' => 'deny@gmail.com',
         'password' => Hash::make(1),
       ], [
@@ -59,8 +58,12 @@ class UserSeeder extends Seeder
       $s['address'] = $this->faker->address();
       $s['birthDate'] = $this->faker->date();
       $staff = User::create($s);
-      if (in_array($staff->id, [1, 2])) {
+      if ($staff->id == 1) {
+        $staff->assignRole('dev');
+      } else if ($staff->id == 2) {
         $staff->assignRole('chief');
+      } else if (in_array($staff->id, [3])) {
+        $staff->assignRole('admin');
       } else {
         $staff->assignRole('staff');
       }

@@ -7,6 +7,7 @@ import DeleteButton from "@/Components/DeleteButton.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import SectionHeader from "@/Components/SectionHeader.vue";
 const staffs = usePage().props.value.staffs;
+const user = usePage().props.value.auth.user;
 </script>
 
 <template>
@@ -32,38 +33,50 @@ const staffs = usePage().props.value.staffs;
               <th scope="col" class="font-semibold">NIP</th>
               <th scope="col" class="font-semibold">Nama</th>
               <th scope="col" class="font-semibold">Alamat</th>
-              <th scope="col" class="font-semibold">Tanggal lahir</th>
+              <th scope="col" class="font-semibold">Role</th>
               <th scope="col" class="font-semibold">Aksi</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(staff, index) in staffs" v-bind:key="index">
-              <td class="">
-                {{ index + 1 }}
-              </td>
-              <td class="">{{ staff.nip ?? "" }}</td>
-              <td class="">{{ staff.name }}</td>
-              <td class="">
-                {{ staff.address }}
-              </td>
-              <td class="">{{ staff.birthDate }}</td>
-              <td>
-                <div class="flex flex-row gap-x-1 ustify-around">
-                  <Link
-                    class="py-2 px-2 bg-gray-500 cursor-pointer rounded-md shadow-md"
-                    :href="route('staffs.edit', staff.id)">
-                    <PencilIcon class="h-5 w-5 text-white" />
-                  </Link>
-                  <button
-                    class="py-2 px-2 bg-red-500 cursor-pointer rounded-md shadow-md"
-                    @click="
-                      deleteRow('', staff.id, 'Hapus ' + staff.name + ' ?')
-                    ">
-                    <TrashIcon class="h-5 w-5 text-white" />
-                  </button>
-                </div>
-              </td>
-            </tr>
+            <template v-for="(staff, index) in staffs" v-bind:key="index">
+              <tr v-if="staff.roles[0].level != 0">
+                <td class="">
+                  {{ index + 1 }}
+                </td>
+                <td class="">{{ staff.nip ?? "" }}</td>
+                <td class="">
+                  {{ staff.name }}
+                  <span
+                    v-if="staff.name == user.name"
+                    class="text-blue-600 font-medium">
+                    (Anda)
+                  </span>
+                </td>
+                <td class="">
+                  {{ staff.address }}
+                </td>
+                <td class="">{{ staff.roles[0].title }}</td>
+                <!-- <td class="">{{ staff.birthDate }}</td> -->
+                <td>
+                  <div
+                    v-if="user.roles[0].level <= staff.roles[0].level"
+                    class="flex flex-row gap-x-1 ustify-around">
+                    <Link
+                      class="py-2 px-2 bg-gray-500 cursor-pointer rounded-md shadow-md"
+                      :href="route('staffs.edit', staff.id)">
+                      <PencilIcon class="h-5 w-5 text-white" />
+                    </Link>
+                    <button
+                      class="py-2 px-2 bg-red-500 cursor-pointer rounded-md shadow-md"
+                      @click="
+                        deleteRow('', staff.id, 'Hapus ' + staff.name + ' ?')
+                      ">
+                      <TrashIcon class="h-5 w-5 text-white" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
       </div>
@@ -90,7 +103,18 @@ export default {
         cancelButtonText: "Batal",
       }).then((result) => {
         if (result.isConfirmed) {
-          this.$inertia.delete("/staffs/" + id, {});
+          this.$inertia.delete("/staffs/" + id, {
+            onFinish: () => {
+              Swal.fire({
+                title: "Berhasil",
+                text: "Data pegawai ditambahkan",
+                icon: "success",
+                closeOnClickOutside: false,
+              }).then((result) => {
+                window.location.reload();
+              });
+            },
+          });
         }
       });
     },
