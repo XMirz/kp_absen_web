@@ -6,7 +6,8 @@ import { TrashIcon, PlusSmIcon, PencilIcon } from "@heroicons/vue/outline";
 import DeleteButton from "@/Components/DeleteButton.vue";
 import ButtonLink from "@/Components/ButtonLink.vue";
 import SectionHeader from "@/Components/SectionHeader.vue";
-const staffs = usePage().props.value.staffs;
+import Input from "@/Components/Input.vue";
+import Label from "@/Components/Label.vue";
 const user = usePage().props.value.auth.user;
 </script>
 
@@ -25,25 +26,37 @@ const user = usePage().props.value.auth.user;
           >
         </ButtonLink></SectionHeader
       >
+      <div class="flex flex-row justify-end items-center gap-x-4">
+        <Label for="search" value="Cari nama" />
+        <Input
+          id="search"
+          type="text"
+          name="search"
+          v-model="search"
+          @keyup="filterStaffs(search)"
+          required
+          class="mt-1"></Input>
+      </div>
       <div class="overflow-x-auto w-full pb-4">
         <table class="table w-full">
           <thead>
             <tr class="font-poppins">
               <th scope="col" class="!static font-semibold">#</th>
-              <th scope="col" class="font-semibold">NIP</th>
               <th scope="col" class="font-semibold">Nama</th>
+              <th scope="col" class="font-semibold">NIP</th>
               <th scope="col" class="font-semibold">Alamat</th>
               <th scope="col" class="font-semibold">Role</th>
               <th scope="col" class="font-semibold">Aksi</th>
             </tr>
           </thead>
           <tbody>
-            <template v-for="(staff, index) in staffs" v-bind:key="index">
+            <template
+              v-for="(staff, index) in filteredStaffs"
+              v-bind:key="index">
               <tr v-if="staff.roles[0].level != 0">
                 <td class="">
                   {{ index + 1 }}
                 </td>
-                <td class="">{{ staff.nip ?? "" }}</td>
                 <td class="">
                   {{ staff.name }}
                   <span
@@ -52,6 +65,7 @@ const user = usePage().props.value.auth.user;
                     (Anda)
                   </span>
                 </td>
+                <td class="">{{ staff.nip ?? "" }}</td>
                 <td class="">
                   {{ staff.address }}
                 </td>
@@ -86,7 +100,23 @@ const user = usePage().props.value.auth.user;
 
 <script>
 export default {
+  data() {
+    return {
+      search: "",
+      staffs: usePage().props.value.staffs,
+      filteredStaffs: usePage().props.value.staffs,
+    };
+  },
   methods: {
+    //Filter staffs by search
+    filterStaffs(search) {
+      var filtered = this.staffs.filter((staff) => {
+        if (staff.name.includes(search)) {
+          return staff;
+        }
+      });
+      this.filteredStaffs = filtered;
+    },
     deleteRow(routes, id, title, subtitle, successTitle, successSubtitle) {
       Swal.fire({
         title: title ?? "Title",

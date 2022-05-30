@@ -45,11 +45,11 @@ const avatarUrl = computed(
             :active="route().current('*presence*')">
             Presensi</NavLink
           >
-          <NavLink
+          <!-- <NavLink
             :href="route('settings.index')"
             :active="route().current('*settings*')">
             Pengaturan</NavLink
-          >
+          > -->
           <NavLink :href="route('logout')" method="post" as="button"
             >Keluar</NavLink
           >
