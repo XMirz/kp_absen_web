@@ -18,7 +18,7 @@ const props = defineProps({ title: String });
       <!-- Page Content -->
       <Sidebar />
       <div
-        class="flex flex-col justify-start items-start w-[calc(100vw-18rem)]">
+        class="flex flex-col justify-start items-start h-screen overflow-auto w-[calc(100vw-18rem)]">
         <!-- Header -->
         <div
           class="bg-white w-full border-black/15 shadow-black/10 shadow-sm border-b flex flex-row items-center px-8 py-4 relative z-10">

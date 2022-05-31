@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Presence;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -20,12 +21,41 @@ class PresenceController extends Controller
   {
     // TODO csdad
     $today = Carbon::now();
-    $staffsPresence = User::all();
+    $rawStaffs = User::with('roles')->get();
     $presences = [];
-    foreach ($staffsPresence as $staff) {
+    // Filter staff
+    $staffs = $rawStaffs->filter(function (User $staff) {
+      if ($staff->roles()->first()->level != 0) {
+        return $staff;
+      }
+    })->values();
+    foreach ($staffs as $staff) {
       $staff->todayPresence = Presence::where('user_id', $staff->id)->whereDate('checkInTime', '=', now('+7')->format('Y-m-d'))->first();
     }
-    return Inertia::render('Presence/Index', compact('staffsPresence', 'presences', 'today'));
+    $todayStaffsPresences = $staffs;
+
+    // Monthly
+    // Group by month and year
+    $groupedAllPresences = Presence::all()->groupBy([
+      function ($presence) {
+        return $presence->checkInTime->format('Y');
+      },
+      function ($presence) {
+        return $presence->checkInTime->translatedFormat('m');
+      },
+    ]);
+
+    $yearsMonths = [];
+    foreach ($groupedAllPresences as $year => $yearValue) {
+      $years = [];
+      foreach ($yearValue as $monthNumber => $value) {
+        $monthName = Carbon::createFromFormat('Y-m-d', '2022-' . $monthNumber . '-01')->translatedFormat('F');
+        $years[$monthNumber] = $monthName;
+      }
+      $yearsMonths[$year] = $years;
+    }
+
+    return Inertia::render('Presence/Index', compact('todayStaffsPresences', 'today', 'yearsMonths'));
   }
 
   /**

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/presence', [ApiPresenceController::class, 'index']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
   Route::post('/presence', [ApiPresenceController::class, 'store']);
   Route::patch('/presence/{presence}', [ApiPresenceController::class, 'update']);

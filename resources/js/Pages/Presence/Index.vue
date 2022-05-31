@@ -7,9 +7,10 @@ import { TrashIcon } from "@heroicons/vue/outline";
 import DeleteButton from "@/Components/DeleteButton.vue";
 import NavLink from "@/Components/NavLink.vue";
 import { computed } from "vue";
+import Label from "@/Components/Label.vue";
+import axios from "axios";
 const props = usePage().props.value;
-const staffsPresence = props.staffsPresence;
-const presences = props.presences;
+const todayStaffsPresences = props.todayStaffsPresences;
 // change momentJS locale
 moment.locale("id");
 </script>
@@ -70,7 +71,9 @@ moment.locale("id");
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(staff, index) in staffsPresence" v-bind:key="index">
+            <tr
+              v-for="(staff, index) in todayStaffsPresences"
+              v-bind:key="index">
               <td class="">
                 {{ index + 1 }}
               </td>
@@ -103,20 +106,167 @@ moment.locale("id");
       <h1 class="font-sans text-xl font-semibold text-gray-700">
         Laporan bulanan
       </h1>
+      <div class="flex flex-row justify-start gap-x-8">
+        <div class="w-1/4">
+          <Label for="year" value="Tahun" />
+          <select
+            id="year"
+            name="year"
+            v-model="selectedReportYear"
+            @change="updateReportMonths"
+            class="border-gray-300 focus:border-blue-300 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+            <template v-for="(year, index) in reportYears" :key="index">
+              <option :value="year">
+                {{ year }}
+              </option>
+            </template>
+          </select>
+        </div>
+        <div class="w-1/4">
+          <Label for="month" value="Bulan" />
+          <select
+            id="month"
+            name="month"
+            v-model="selectedReportMonth"
+            @click="fetchReportMonth"
+            class="border-gray-300 focus:border-blue-300 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full">
+            <template
+              v-for="(monthNumber, index) in Object.keys(reportMonths)"
+              :key="index">
+              <option :value="monthNumber">
+                {{ this.reportMonths[monthNumber] }}
+              </option>
+            </template>
+          </select>
+        </div>
+      </div>
+
+      <div class="">
+        <h2 class="text-lg font-semibold">
+          Rekapitulasi bulan
+          {{ moment(day).format("MMMM") + " tahun " + moment(day).format("Y") }}
+        </h2>
+      </div>
+      <!-- Table  -->
+      <div class="overflow-x-auto w-full pb-4">
+        <table class="table w-full">
+          <thead class="text-center">
+            <tr class="font-poppins">
+              <th
+                scope="col"
+                rowspan="2"
+                class="!static font-normal border-b-0 border-r border-black/10">
+                #
+              </th>
+              <th
+                scope="col"
+                rowspan="2"
+                class="font-normal border-b-0 border-r border-black/10">
+                Nama pegawai
+              </th>
+              <th
+                scope="col"
+                :colspan="totalDaysInMonth"
+                class="font-normal border-b border-r border-black/10">
+                Tanggal
+              </th>
+            </tr>
+            <tr>
+              <th
+                v-for="(day, index) in daysInMonth"
+                :key="index"
+                class="!static font-normal border-b-0 border-r border-black/10 py-2 px-2"
+                :class="day.isWeekend == true ? 'bg-red-500' : ''">
+                {{ moment(day["date"]).format("D") }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(staffsPresences, indexStaff) in monthlyStaffsPresences"
+              :key="indexStaff">
+              <td>{{ indexStaff + 1 }}</td>
+              <td>
+                {{ staffsPresences.name }}
+              </td>
+              <template v-for="(day, index) in daysInMonth" :key="index">
+                <td class="py-2 px-2">
+                  <span
+                    v-for="(presence, j) in relatedStaffPresence(
+                      indexStaff,
+                      day.date
+                    )"
+                    :key="j"
+                    >🗸</span
+                  >
+                </td>
+              </template>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </DashboardLayout>
 </template>
 
 <script>
 export default {
-  // data() {
-  //   return {
-  //     moment: moment,
-  //   };
-  // },
-  computed: {},
-  mounted() {},
+  data() {
+    return {
+      selectedReportYear: "",
+      selectedReportMonth: "",
+      reportYearsMonth: usePage().props.value.yearsMonths, // Array of years, that array of month
+      day: "", // Used to generate month and year name by moment js
+      totalDaysInMonth: 30,
+      daysInMonth: [],
+      reportYears: [],
+      reportMonths: {},
+      monthlyStaffsPresences: {}, // Object ,Changed when year selected ,
+    };
+  },
+  computed: {
+    // Calculate if presence and staff is related
+  },
+  mounted() {
+    let newReportYear = [];
+    Object.keys(this.reportYearsMonth).forEach(function (year) {
+      newReportYear.push(year);
+    });
+    // Set avaible years and set selected
+    this.reportYears = newReportYear;
+    this.selectedReportYear = this.reportYears[this.reportYears.length - 1];
+
+    this.updateReportMonths();
+  },
   methods: {
+    async updateReportMonths() {
+      // Selected year update by vue internally
+      this.reportMonths = this.reportYearsMonth[this.selectedReportYear];
+      // Set avaible for selected years and set selected
+      let reportMonthsKeys = Object.keys(this.reportMonths);
+      this.selectedReportMonth = reportMonthsKeys[0];
+      this.fetchReportMonth();
+    },
+    async fetchReportMonth() {
+      let response = await axios.get(
+        `/api/presence/?year=${this.selectedReportYear}&month=${this.selectedReportMonth}`
+      );
+
+      if (response.status == 200) {
+        let res = JSON.parse(JSON.stringify(response.data));
+        // update, if there is no month or year provider on ther request., so its will return current month
+        this.day = res["day"];
+        this.selectedReportYear = res["year"];
+        this.selectedReportMonth = res["month"];
+
+        this.daysInMonth = res["daysInMonth"];
+        this.totalDaysInMonth = res["totalDaysInMonth"];
+        this.monthlyStaffsPresences = res["staffsMonthlyPresences"];
+      }
+      console.log(this.monthlyStaffsPresences);
+      window.shit = this.monthlyStaffsPresences;
+    },
+
     // Function to chceck and return status string;
     todayPresenceStatus(presence) {
       if (presence == null) {
@@ -159,6 +309,16 @@ export default {
           this.$inertia.delete("/staffs/" + id, {});
         }
       });
+    },
+    // Fuction to filter presence of user array
+    relatedStaffPresence(staffIndex, date) {
+      return this.monthlyStaffsPresences
+        .at(staffIndex)
+        .presences.filter((presence) => {
+          return (
+            moment(presence.checkInTime).format("D") == moment(date).format("D")
+          );
+        });
     },
   },
 };

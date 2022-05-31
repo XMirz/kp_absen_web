@@ -11,6 +11,8 @@ class Presence extends Model
   protected $guarded = ['id'];
   protected $casts = [
     'inArea' => 'boolean',
+    'checkInTime' => 'datetime',
+    'checkOutTime' => 'datetime',
   ];
 
   public function user()
