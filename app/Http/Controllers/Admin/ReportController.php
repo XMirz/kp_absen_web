@@ -4,9 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Presence;
+use App\Models\User;
+use Arr;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str as SupportStr;
 use Inertia\Inertia;
+use Nette\Utils\Arrays;
+use Nette\Utils\Json;
+use Str;
 
 class ReportController extends Controller
 {
@@ -32,5 +39,69 @@ class ReportController extends Controller
       $reportYearsMonths[$year] = $years;
     }
     return Inertia::render('Report/Index', compact('reportYearsMonths'));
+  }
+
+  // Printing
+  public function show(Request $request)
+  {
+    $rawStaffs = User::with('roles')->get();
+    $staffs = $rawStaffs->filter(function (User $staff) {
+      if ($staff->roles()->first()->level != 0) {
+        return $staff;
+      }
+    })->values();
+
+    $today = now(+7);
+    $day = Carbon::createFromDate($request->year ?? $today->format('Y'), $request->month ?? $today->format('m'), '01');
+    $month = $request->month ?? $today->format('m');
+    $year = $request->year ?? $today->format('Y');
+    foreach ($staffs as $staff) {
+      $staff->presences = Presence::where('user_id', $staff->id)->whereYear('checkInTime', '=', $year)->whereMonth('checkInTime', '=', $month)->get()->groupBy(function ($item) {
+        return (int)$item->checkInTime->format('d');
+      });
+      // unset($staff->roles);
+    }
+
+
+    // Fetch holiday Api
+    $holidayJson = file_get_contents(public_path() . '/data/holiday/' . $year . '.json');
+    $yearHoliday = Json::decode($holidayJson);
+    // Month Holiday
+    $holiday = Arr::where($yearHoliday, function ($day, $index) use ($year, $month) {
+      return Str::contains($day->holiday_date, "$year-$month");
+    });
+    // dd($holiday);
+    // Get all day from the request month
+    $daysInMonth = [];
+    for ($i = 1; $i < $day->daysInMonth + 1; $i++) {
+      $newDay = [];
+      $newDay['date'] =  Carbon::createFromFormat('Y-m-d', $year . '-' . $month . '-' . $i);
+      $newDay['isWeekend'] = in_array($newDay['date']->translatedFormat('l'), ['Sabtu', 'Minggu']);
+
+      $newDay['holidayName'] = '';
+      // Check if current looping day is matched for  a day in Holiday APi;
+      $isHoliday = Arrays::some($holiday, function ($day, $index) use (&$newDay) {
+        // @var $day is an object ,not an array
+        $holidayDate =  Carbon::createFromFormat('Y-m-d', $day->holiday_date);
+        $isSameDay = $holidayDate->isSameDay($newDay['date']);
+        if ($isSameDay) {
+          $newDay['holidayName'] = $day->holiday_name;
+        }
+        return $isSameDay;
+      });
+      $newDay['isHoliday'] =  $isHoliday;
+      $daysInMonth[] = $newDay;
+    }
+    $response = [];
+    $response["day"] = $day;
+    $response["month"] = $month;
+    $response["year"] = $year;
+    $response["totalDaysInMonth"] = $day->daysInMonth;
+    $response["daysInMonth"] = $daysInMonth;
+    $response["monthlyStaffsPresences"] = $staffs;
+
+    $filePath = public_path() . "/generated/test.pdf";
+    $pdf = Pdf::loadView('pdf.monthly-report', $response)->setPaper('a4', 'landscape');
+    return $pdf->stream();
   }
 }

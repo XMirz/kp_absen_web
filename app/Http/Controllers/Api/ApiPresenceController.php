@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Nette\Utils\Arrays;
 use Nette\Utils\Json;
+use Str;
 
 class ApiPresenceController extends Controller
 {
@@ -33,9 +34,12 @@ class ApiPresenceController extends Controller
     }
 
 
-    // Fetch holiday Api
-    $holidayJson = file_get_contents('https://api-harilibur.vercel.app/api?year=' . $year . '&month=' . $month);
-    $holiday = Json::decode($holidayJson);
+    $holidayJson = file_get_contents(public_path() . '/data/holiday/' . $year . '.json');
+    $yearHoliday = Json::decode($holidayJson);
+    // Month Holiday
+    $holiday = Arr::where($yearHoliday, function ($day, $index) use ($year, $month) {
+      return Str::contains($day->holiday_date, "$year-$month");
+    });
     // dd($holiday);
     // Get all day from the request month
     $daysInMonth = [];

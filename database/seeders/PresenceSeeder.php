@@ -53,7 +53,7 @@ class PresenceSeeder extends Seeder
         ]);
       }
     }
-    for ($i = 1; $i < 4; $i++) {
+    for ($i = 8; $i > 0; $i--) {
       for ($j = 6; $j > -1; $j--) {
         Presence::create([
           'inArea' => false,

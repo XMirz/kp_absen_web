@@ -2,16 +2,18 @@
 import axios from "axios";
 import moment from "moment";
 import Button from "@/Components/Button.vue";
+import Label from "@/Components/Label.vue";
 import DashboardLayout from "@/Layouts/DashboardLayout.vue";
 // change momentJS locale
 moment.locale("id");
 </script>
 
 <template>
-  <DashboardLayout>
+  <DashboardLayout title="Laporan Bulanan">
     <section class="space-y-4 px-8">
       <h1 class="font-sans text-xl font-semibold text-gray-700">
-        Laporan bulanan
+        Rekapitulasi bulan
+        {{ moment(day).format("MMMM") + " tahun " + moment(day).format("Y") }}
       </h1>
       <div class="flex flex-row justify-start gap-x-8">
         <div class="w-1/4">
@@ -46,44 +48,38 @@ moment.locale("id");
             </template>
           </select>
         </div>
-        <div class="">
-          <Button>Cetak</Button>
+        <div class="flex items-end justify-end">
+          <Button @click="printReport">Cetak</Button>
         </div>
       </div>
 
-      <div class="">
-        <h2 class="text-lg font-semibold">
-          Rekapitulasi bulan
-          {{ moment(day).format("MMMM") + " tahun " + moment(day).format("Y") }}
-        </h2>
-      </div>
       <!-- Table  -->
       <div class="overflow-x-auto w-full pb-4">
-        <table class="table w-full">
+        <table class="table border-collapse table-compact text-base w-full">
           <thead class="text-center">
             <tr class="font-poppins">
               <th
                 scope="col"
                 rowspan="2"
-                class="!static font-normal border-b-0 border-r border-black/10">
+                class="!static font-normal border border-black/20">
                 #
               </th>
               <th
                 scope="col"
                 rowspan="2"
-                class="font-normal border-b-0 border-r border-black/10">
+                class="font-normal border border-black/20">
                 Nama
               </th>
               <th
                 scope="col"
                 rowspan="2"
-                class="font-normal border-b-0 border-r border-black/10">
+                class="font-normal border border-black/20">
                 Jabatan
               </th>
               <th
                 scope="col"
                 :colspan="totalDaysInMonth"
-                class="font-normal border-b border-r border-black/10">
+                class="font-normal border border-black/20">
                 Tanggal
               </th>
             </tr>
@@ -91,12 +87,16 @@ moment.locale("id");
               <th
                 v-for="(day, index) in daysInMonth"
                 :key="index"
-                class="!static font-normal border-b-0 border-r border-black/10 py-2 px-2"
+                class="!static font-normal border border-black/20"
                 :class="
-                  (day.isWeekend == true ? 'bg-yellow-500' : '') ||
-                  (day.isHoliday == true ? 'bg-red-500' : '')
+                  (day.isHoliday == true ? 'bg-red-500' : '') ||
+                  (day.isWeekend == true ? 'bg-yellow-500' : '')
                 ">
-                {{ moment(day["date"]).format("D") }}
+                <div
+                  :class="day.isHoliday ? 'tooltip normal-case' : ''"
+                  :data-tip="day.isHoliday ? day.holidayName : ''">
+                  {{ moment(day["date"]).format("D") }}
+                </div>
               </th>
             </tr>
           </thead>
@@ -104,23 +104,32 @@ moment.locale("id");
             <tr
               v-for="(staffsPresences, indexStaff) in monthlyStaffsPresences"
               :key="indexStaff">
-              <td>{{ indexStaff + 1 }}</td>
-              <td>
+              <td class="font-normal border border-black/20">
+                {{ indexStaff + 1 }}
+              </td>
+              <td class="font-normal border border-black/20">
                 {{ staffsPresences.name }}
               </td>
-              <td>
+              <td class="font-normal border border-black/20">
                 {{ staffsPresences.roles[0].title }}
               </td>
               <template v-for="(day, index) in daysInMonth" :key="index">
-                <td class="py-2 px-2">
-                  <span
-                    v-for="(presence, j) in relatedStaffPresence(
-                      indexStaff,
-                      day.date
-                    )"
-                    :key="j"
-                    >🗸</span
-                  >
+                <td
+                  class="text-center font-normal border border-black/20"
+                  :class="
+                    (day.isHoliday == true ? 'bg-red-500' : '') ||
+                    (day.isWeekend == true ? 'bg-yellow-500' : '')
+                  ">
+                  <template v-if="!(day.isWeekend || day.isHoliday)">
+                    <span
+                      v-for="(presence, j) in relatedStaffPresence(
+                        indexStaff,
+                        day.date
+                      )"
+                      :key="j"
+                      >🗸</span
+                    >
+                  </template>
                 </td>
               </template>
             </tr>
@@ -197,6 +206,9 @@ export default {
             moment(presence.checkInTime).format("D") == moment(date).format("D")
           );
         });
+    },
+    printReport() {
+      window.location = `/report/print?year=${this.selectedReportYear}&month=${this.selectedReportMonth}`;
     },
   },
 };
