@@ -1,9 +1,10 @@
 <script setup>
 import moment from "moment";
 import Swal from "sweetalert2";
+import { Head, usePage } from "@inertiajs/inertia-vue3";
+import VueHtmlToPaper from "vue-html-to-paper";
 import DashboardLayout from "@/Layouts/DashboardLayout.vue";
 import MonthlyReportSectionVue from "@/Components/Presence/MonthlyReportSection.vue";
-import { Head, usePage } from "@inertiajs/inertia-vue3";
 import { TrashIcon } from "@heroicons/vue/outline";
 import DeleteButton from "@/Components/DeleteButton.vue";
 import NavLink from "@/Components/NavLink.vue";
@@ -11,7 +12,6 @@ import { computed } from "vue";
 import Label from "@/Components/Label.vue";
 import MonthlyReportSection from "@/Components/Presence/MonthlyReportSection.vue";
 const props = usePage().props.value;
-console.log(props);
 
 const todayStaffsPresences = props.todayStaffsPresences;
 // change momentJS locale

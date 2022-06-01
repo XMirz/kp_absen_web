@@ -1,6 +1,7 @@
 <script setup>
 import axios from "axios";
 import moment from "moment";
+import Button from "@/Components/Button.vue";
 // change momentJS locale
 moment.locale("id");
 </script>
@@ -43,6 +44,9 @@ moment.locale("id");
           </template>
         </select>
       </div>
+      <div class="">
+        <Button>Cetak</Button>
+      </div>
     </div>
 
     <div class="">
@@ -66,7 +70,13 @@ moment.locale("id");
               scope="col"
               rowspan="2"
               class="font-normal border-b-0 border-r border-black/10">
-              Nama pegawai
+              Nama
+            </th>
+            <th
+              scope="col"
+              rowspan="2"
+              class="font-normal border-b-0 border-r border-black/10">
+              Jabatan
             </th>
             <th
               scope="col"
@@ -80,7 +90,10 @@ moment.locale("id");
               v-for="(day, index) in daysInMonth"
               :key="index"
               class="!static font-normal border-b-0 border-r border-black/10 py-2 px-2"
-              :class="day.isWeekend == true ? 'bg-red-500' : ''">
+              :class="
+                (day.isWeekend == true ? 'bg-yellow-500' : '') ||
+                (day.isHoliday == true ? 'bg-red-500' : '')
+              ">
               {{ moment(day["date"]).format("D") }}
             </th>
           </tr>
@@ -92,6 +105,9 @@ moment.locale("id");
             <td>{{ indexStaff + 1 }}</td>
             <td>
               {{ staffsPresences.name }}
+            </td>
+            <td>
+              {{ staffsPresences.roles[0].title }}
             </td>
             <template v-for="(day, index) in daysInMonth" :key="index">
               <td class="py-2 px-2">

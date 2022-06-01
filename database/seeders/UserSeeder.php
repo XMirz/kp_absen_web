@@ -49,6 +49,21 @@ class UserSeeder extends Seeder
         'name' => 'M. Ilham Habibie',
         'email' => 'habibi@gmail.com',
         'password' => Hash::make(1),
+      ],
+      [
+        'name' => 'Maulana Junihardi',
+        'email' => 'maulana@gmail.com',
+        'password' => Hash::make(1),
+      ],
+      [
+        'name' => 'Fachrul Rozi',
+        'email' => 'rozi@gmail.com',
+        'password' => Hash::make(1),
+      ],
+      [
+        'name' => 'Ferdian Arya Dinata',
+        'email' => 'ferdian@gmail.com',
+        'password' => Hash::make(1),
       ]
     ];
 

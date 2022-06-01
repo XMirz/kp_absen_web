@@ -22,7 +22,7 @@
   @inertiaHead
 </head>
 
-<body class="font-sans antialiased  w-screen min-h-screen">
+<body class="font-sans antialiased  w-screen h-screen">
   @inertia
 
   @env ('local')

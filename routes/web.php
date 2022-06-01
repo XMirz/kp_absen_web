@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\PresenceController;
+use App\Http\Controllers\Admin\PrintReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -19,6 +20,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+  return redirect(route('login'));
   return Inertia::render('Welcome', [
     'canLogin' => Route::has('login'),
     'canRegister' => Route::has('register'),
@@ -29,6 +31,7 @@ Route::get('/', function () {
 
 
 Route::group(['middleware' => ['auth', 'role:dev|admin|chief']], function () {
+  Route::get('/presences/print', [PrintReportController::class, 'show']); //Accept year and month parameter
   Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
   })->name('dashboard');
