@@ -45,6 +45,11 @@ const avatarUrl = computed(
             :active="route().current('*presence*')">
             Presensi</NavLink
           >
+          <NavLink
+            :href="route('report.index')"
+            :active="route().current('*report*')">
+            Laporan bulanan</NavLink
+          >
           <!-- <NavLink
             :href="route('settings.index')"
             :active="route().current('*settings*')">

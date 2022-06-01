@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\PresenceController;
 use App\Http\Controllers\Admin\PrintReportController;
+use App\Http\Controllers\Admin\ReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,12 +32,13 @@ Route::get('/', function () {
 
 
 Route::group(['middleware' => ['auth', 'role:dev|admin|chief']], function () {
-  Route::get('/presences/print', [PrintReportController::class, 'show']); //Accept year and month parameter
+  Route::get('/report/print', [PrintReportController::class, 'show']); //Accept year and month parameter
   Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
   })->name('dashboard');
   Route::resource('/staffs', StaffController::class)->names('staffs');
   Route::resource('/presences', PresenceController::class)->names('presences');
+  Route::get('/report', [ReportController::class, 'index'])->name('report.index');
   Route::group(['prefix' => '/settings'],  function () {
     Route::get('/', [SettingController::class, 'index'])->name('settings.index');
   });

@@ -34,28 +34,11 @@ class PresenceController extends Controller
     }
     $todayStaffsPresences = $staffs;
 
-    // Monthly
-    // Group by month and year
-    $groupedAllPresences = Presence::all()->groupBy([
-      function ($presence) {
-        return $presence->checkInTime->format('Y');
-      },
-      function ($presence) {
-        return $presence->checkInTime->translatedFormat('m');
-      },
-    ]);
 
-    $yearsMonths = [];
-    foreach ($groupedAllPresences as $year => $yearValue) {
-      $years = [];
-      foreach ($yearValue as $monthNumber => $value) {
-        $monthName = Carbon::createFromFormat('Y-m-d', '2022-' . $monthNumber . '-01')->translatedFormat('F');
-        $years[$monthNumber] = $monthName;
-      }
-      $yearsMonths[$year] = $years;
-    }
 
-    return Inertia::render('Presence/Index', compact('todayStaffsPresences', 'today', 'yearsMonths'));
+
+
+    return Inertia::render('Presence/Index', compact('todayStaffsPresences', 'today'));
   }
 
   /**
