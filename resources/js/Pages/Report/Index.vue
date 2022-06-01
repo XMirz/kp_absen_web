@@ -48,7 +48,7 @@ moment.locale("id");
             </template>
           </select>
         </div>
-        <div class="flex items-end justify-end">
+        <div class="ml-auto flex items-end">
           <Button @click="printReport">Cetak</Button>
         </div>
       </div>
@@ -202,8 +202,6 @@ export default {
         this.totalDaysInMonth = res["totalDaysInMonth"];
         this.monthlyStaffsPresences = res["staffsMonthlyPresences"];
       }
-      console.log(this.monthlyStaffsPresences);
-      window.shit = this.monthlyStaffsPresences;
     },
 
     // Fuction to filter presence of user array
@@ -217,7 +215,14 @@ export default {
         });
     },
     printReport() {
-      window.location = `/report/print?year=${this.selectedReportYear}&month=${this.selectedReportMonth}`;
+      window
+        .open(
+          `${route("report.show")}?year=${this.selectedReportYear}&month=${
+            this.selectedReportMonth
+          }`,
+          "_blank"
+        )
+        .focus();
     },
   },
 };

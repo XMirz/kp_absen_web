@@ -39,7 +39,6 @@ Route::group(['middleware' => ['auth', 'role:dev|admin|chief']], function () {
   Route::resource('/presences', PresenceController::class)->names('presences');
   Route::get('/report', [ReportController::class, 'index'])->name('report.index');
   Route::get('/report/print', [ReportController::class, 'show'])->name('report.show'); //Accept year and month parameter
-  Route::get('/report/print2', [ReportController::class, 'show2'])->name('report.show2'); //Accept year and month parameter
   Route::group(['prefix' => '/settings'],  function () {
     Route::get('/', [SettingController::class, 'index'])->name('settings.index');
   });
