@@ -24,7 +24,7 @@ class ApiPresenceController extends Controller
       }
     })->values();
 
-    $today = now(+7);
+    $today = now('+7');
     $day = Carbon::createFromDate($request->year ?? $today->format('Y'), $request->month ?? $today->format('m'), '01');
     $month = $request->month ?? $today->format('m');
     $year = $request->year ?? $today->format('Y');
@@ -34,12 +34,14 @@ class ApiPresenceController extends Controller
     }
 
 
+    // Get Hoiday JSON from
     $holidayJson = file_get_contents(public_path() . '/data/holiday/' . $year . '.json');
     $yearHoliday = Json::decode($holidayJson);
     // Month Holiday
     $holiday = Arr::where($yearHoliday, function ($day, $index) use ($year, $month) {
       return Str::contains($day->holiday_date, "$year-$month");
     });
+
     // dd($holiday);
     // Get all day from the request month
     $daysInMonth = [];
@@ -57,11 +59,13 @@ class ApiPresenceController extends Controller
         if ($isSameDay) {
           $newDay['holidayName'] = $day->holiday_name;
         }
-        return $isSameDay;
+        $isNationalHoliday = $day->is_national_holiday;
+        return $isSameDay && $isNationalHoliday;
       });
       $newDay['isHoliday'] =  $isHoliday;
       $daysInMonth[] = $newDay;
     }
+    // dd($daysInMonth);
     $response = [];
     $response["day"] = $day;
     $response["month"] = $month;

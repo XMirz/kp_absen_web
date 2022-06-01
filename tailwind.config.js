@@ -8,6 +8,8 @@ module.exports = {
     "./resources/js/**/*.vue",
   ],
 
+  safelist: ["mt-12", "mt-4"],
+
   theme: {
     extend: {
       fontFamily: {

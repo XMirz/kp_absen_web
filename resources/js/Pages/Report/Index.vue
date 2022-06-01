@@ -54,7 +54,7 @@ moment.locale("id");
       </div>
 
       <!-- Table  -->
-      <div class="overflow-x-auto w-full pb-4">
+      <div class="overflow-x-auto w-full pb-4 space-y-4">
         <table class="table border-collapse table-compact text-base w-full">
           <thead class="text-center">
             <tr class="font-poppins">
@@ -135,6 +135,15 @@ moment.locale("id");
             </tr>
           </tbody>
         </table>
+        <div class="">
+          <div class="flex flex-row items-center justify-end gap-x-2">
+            <span>Keterangan :</span>
+            <span class="ml-4 w-3 h-3 bg-red-600"></span>
+            <span>Hari libur nasional</span>
+            <span class="ml-4 w-3 h-3 bg-yellow-500"></span>
+            <span>Akhir pekan</span>
+          </div>
+        </div>
       </div>
     </section>
   </DashboardLayout>

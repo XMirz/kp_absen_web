@@ -13,7 +13,11 @@ use Illuminate\Support\Str as SupportStr;
 use Inertia\Inertia;
 use Nette\Utils\Arrays;
 use Nette\Utils\Json;
+use Response;
+use Spatie\Browsershot\Browsershot;
+use Storage;
 use Str;
+use View;
 
 class ReportController extends Controller
 {
@@ -87,7 +91,7 @@ class ReportController extends Controller
         if ($isSameDay) {
           $newDay['holidayName'] = $day->holiday_name;
         }
-        return $isSameDay;
+        return $isSameDay && $day->is_national_holiday;
       });
       $newDay['isHoliday'] =  $isHoliday;
       $daysInMonth[] = $newDay;
@@ -99,9 +103,32 @@ class ReportController extends Controller
     $response["totalDaysInMonth"] = $day->daysInMonth;
     $response["daysInMonth"] = $daysInMonth;
     $response["monthlyStaffsPresences"] = $staffs;
+    $response["chief"] = User::role('chief')->first();
 
-    $filePath = public_path() . "/generated/test.pdf";
-    $pdf = Pdf::loadView('pdf.monthly-report', $response)->setPaper('a4', 'landscape');
-    return $pdf->stream();
+    $fileName = 'Rekap_Absensi_' . now('+7')->translatedFormat('F-Y');
+    $filePath = public_path() . "/generated/pdf/$fileName";
+
+    $response['pageTitle'] = 'Rekapitulasi Absensi ' . now('+7')->translatedFormat('F Y');
+    $html = view('pdf.monthly-report', $response)->render();
+    // $domPdf = Pdf::loadView('pdf.monthly-report', compact('response', 'pageTitle'))->setPaper('a4', 'landscape');
+
+    $pdf = Browsershot::html($html)
+      ->setNodeBinary('/usr/bin/node')
+      ->setNpmBinary('/usr/bin/npm')
+      ->waitUntilNetworkIdle()
+      ->noSandbox()
+      ->format('A4')
+      ->setOption('addStyleTag', json_encode(['path' => 'css/app.css']))
+      ->landscape(true)
+      ->margins(16, 16, 16, 16)
+      ->pdf();
+
+    return response()->stream(function () use ($pdf) {
+      echo $pdf;
+    }, 200, [
+      'Content-Type' => 'application/pdf',
+      "Content-Disposition" => 'inline;filename="' . $fileName . '.pdf"',
+      'Content-Transfer-Encoding: binary'
+    ]);
   }
 }
