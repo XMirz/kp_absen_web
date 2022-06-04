@@ -20,8 +20,9 @@ class ApiConfigurationController extends Controller
     // Check presence eligibility
     // Check if current time beetween 8 and lessthan 16
     $eligibleHours =  intval($today->translatedFormat('H')) > 7 && intval($today->translatedFormat('H')) < 23;
-    // Check today is not saturaday or monday
-    $eligibleDay = !in_array($today->translatedFormat('l'), ['Sabtu', 'Minggu']);
+
+    // Check if the day is holiday 
+    $eligibleDay = !$this->isHoliday($today) && !in_array($today->translatedFormat('l'), ['Sabtu', 'Minggu']);
     if ($todayPresence == null) {
       $eligiblePresence = true;
     } else {
