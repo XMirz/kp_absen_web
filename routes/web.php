@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\PresenceController;
@@ -33,11 +34,8 @@ Route::get('/', function () {
 });
 
 
-
 Route::group(['middleware' => ['auth', 'role:dev|admin|chief']], function () {
-  Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-  })->name('dashboard');
+  Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
   Route::resource('/staffs', StaffController::class)->names('staffs');
   Route::resource('/presences', PresenceController::class)->names('presences');
   Route::get('/report', [ReportController::class, 'index'])->name('report.index');
