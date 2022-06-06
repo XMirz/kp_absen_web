@@ -73,9 +73,7 @@ class UserSeeder extends Seeder
       $s['address'] = $this->faker->address();
       $s['birthDate'] = $this->faker->date();
       $staff = User::create($s);
-      if ($staff->id == 1) {
-        $staff->assignRole('dev');
-      } else if ($staff->id == 2) {
+      if ($staff->id == 2 || $staff->id == 1) {
         $staff->assignRole('chief');
       } else if (in_array($staff->id, [3])) {
         $staff->assignRole('admin');

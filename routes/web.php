@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\PresenceController;
 use App\Http\Controllers\Admin\PrintReportController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Api\ApiPresenceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -20,15 +21,17 @@ use Inertia\Inertia;
 |
 */
 
+
 Route::get('/', function () {
   return redirect(route('login'));
-  return Inertia::render('Welcome', [
-    'canLogin' => Route::has('login'),
-    'canRegister' => Route::has('register'),
-    'laravelVersion' => Application::VERSION,
-    'phpVersion' => PHP_VERSION,
-  ]);
+  // return Inertia::render('Welcome', [
+  //   'canLogin' => Route::has('login'),
+  //   'canRegister' => Route::has('register'),
+  //   'laravelVersion' => Application::VERSION,
+  //   'phpVersion' => PHP_VERSION,
+  // ]);
 });
+
 
 
 Route::group(['middleware' => ['auth', 'role:dev|admin|chief']], function () {
@@ -42,5 +45,8 @@ Route::group(['middleware' => ['auth', 'role:dev|admin|chief']], function () {
   Route::group(['prefix' => '/settings'],  function () {
     Route::get('/', [SettingController::class, 'index'])->name('settings.index');
   });
+
+  // Ajax Route
+  Route::get('/presence', [ApiPresenceController::class, 'index']);
 });
 require __DIR__ . '/auth.php';

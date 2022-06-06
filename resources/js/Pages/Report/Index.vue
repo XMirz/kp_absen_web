@@ -4,6 +4,7 @@ import moment from "moment";
 import Button from "@/Components/Button.vue";
 import Label from "@/Components/Label.vue";
 import DashboardLayout from "@/Layouts/DashboardLayout.vue";
+import { usePage } from "@inertiajs/inertia-vue3";
 // change momentJS locale
 moment.locale("id");
 </script>
@@ -154,9 +155,13 @@ export default {
   props: ["reportYearsMonths"],
   data() {
     return {
+      // Get CSRF Token
+      csrf: document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content"),
       selectedReportYear: "",
       selectedReportMonth: "",
-      reportYearsMonths: this.$props.reportYearsMonths, // Array of years, that array of month
+      // reportYearsMonths: this.$props.reportYearsMonths, // Array of years, that array of month
       day: "", // Used to generate month and year name by moment js
       totalDaysInMonth: 30,
       daysInMonth: [],
@@ -166,9 +171,8 @@ export default {
     };
   },
   mounted() {
-    console.log(this.$props.reportYearsMonths);
     let newReportYear = [];
-    Object.keys(this.reportYearsMonths).forEach(function (year) {
+    Object.keys(this.$props.reportYearsMonths).forEach(function (year) {
       newReportYear.push(year);
     });
     // Set avaible years and set selected
@@ -180,7 +184,8 @@ export default {
   methods: {
     async updateReportMonths() {
       // Selected year update by vue internally
-      this.reportMonths = this.reportYearsMonths[this.selectedReportYear];
+      this.reportMonths =
+        this.$props.reportYearsMonths[this.selectedReportYear];
       // Set avaible for selected years and set selected
       let reportMonthsKeys = Object.keys(this.reportMonths);
       this.selectedReportMonth = reportMonthsKeys[0];
@@ -188,7 +193,12 @@ export default {
     },
     async fetchReportMonth() {
       let response = await axios.get(
-        `/api/presence/?year=${this.selectedReportYear}&month=${this.selectedReportMonth}`
+        `/presence/?year=${this.selectedReportYear}&month=${this.selectedReportMonth}`
+        // {
+        //   headers: {
+        //     "X-CSRF-TOKEN": `${this.csrf}`,
+        //   },
+        // }
       );
 
       if (response.status == 200) {

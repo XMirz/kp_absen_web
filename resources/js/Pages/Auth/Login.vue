@@ -5,6 +5,7 @@ import Label from "@/Components/Label.vue";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import Checkbox from "@/Components/Breeze/Checkbox.vue";
+import BreezeValidationErrors from "@/Components/Breeze/ValidationErrors.vue";
 
 defineProps({
   canResetPassword: Boolean,
@@ -31,9 +32,25 @@ const submit = () => {
         <div
           class="w-full bg-center bg-[url('/images/bg_walikota.jpg')] h-full">
           <div
-            class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-white"></div>
+            class="
+              absolute
+              inset-0
+              bg-gradient-to-r
+              from-black/70
+              via-black/30
+              to-white
+            "></div>
           <div
-            class="relative h-full px-32 py-24 flex flex-col justify-center font-poppins text-white">
+            class="
+              relative
+              h-full
+              px-32
+              py-24
+              flex flex-col
+              justify-center
+              font-poppins
+              text-white
+            ">
             <div class="flex justify-end">
               <img class="w-48" src="/images/logo_kota_pekanbaru.png" alt="" />
             </div>
@@ -47,11 +64,24 @@ const submit = () => {
       </div>
       <div class="h-full w-2/5 flex items-center justify-center">
         <div
-          class="px-16 min-h-[50vh] bg-white shadow-blue-500/30 shadow-2xl rounded-xl flex items-center">
+          class="
+            px-16
+            min-h-[50vh]
+            bg-white
+            shadow-blue-500/30 shadow-2xl
+            rounded-xl
+            flex
+            items-center
+          ">
           <div class="">
             <h2 class="font-poppins text-xl font-semibold mb-6">
               Silahkan Login.
             </h2>
+            <BreezeValidationErrors class="mb-4" />
+
+            <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+              {{ status }}
+            </div>
             <form @submit.prevent="submit">
               <div>
                 <Label for="email" value="Email" />
