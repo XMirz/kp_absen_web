@@ -17,9 +17,6 @@ class UserSeeder extends Seeder
    *
    * @return void
    */
-  public function __construct()
-  {
-  }
   public function run()
   {
     $staffs = [
@@ -68,7 +65,7 @@ class UserSeeder extends Seeder
     ];
 
     foreach ($staffs as $s) {
-      $s['nip'] = random_int(11111111, 999999) . '' . random_int(11111111, 999999);
+      $s['nip'] = random_int(11111111, 99999999) . '' . random_int(11111111, 99999999);
       $s['gender'] = 'L';
       $s['address'] = 'Pekanbaru';
       $s['birthDate'] = now()->subCenturies(2);
