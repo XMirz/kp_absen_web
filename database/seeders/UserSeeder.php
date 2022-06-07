@@ -6,19 +6,19 @@ use App\Models\User;
 use Hash;
 use Illuminate\Database\Seeder;
 use Faker\Factory;
-use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Arr;
 
 class UserSeeder extends Seeder
 {
+  use HasFactory;
   /**
    * Run the database seeds.
    *
    * @return void
    */
-  protected $faker;
   public function __construct()
   {
-    $this->faker = Factory::create('id_ID');
   }
   public function run()
   {
@@ -68,10 +68,10 @@ class UserSeeder extends Seeder
     ];
 
     foreach ($staffs as $s) {
-      $s['nip'] = $this->faker->randomNumber(8) . $this->faker->randomNumber(8);
-      $s['gender'] = $this->faker->randomElement(['L', 'P']);
-      $s['address'] = $this->faker->address();
-      $s['birthDate'] = $this->faker->date();
+      $s['nip'] = random_int(11111111, 999999) . '' . random_int(11111111, 999999);
+      $s['gender'] = 'L';
+      $s['address'] = 'Pekanbaru';
+      $s['birthDate'] = now()->subCenturies(2);
       $staff = User::create($s);
       if ($staff->id == 2 || $staff->id == 1) {
         $staff->assignRole('chief');
