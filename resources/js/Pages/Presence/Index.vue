@@ -1,7 +1,8 @@
 <script setup>
 import moment from "moment";
 import Swal from "sweetalert2";
-import { Head, usePage } from "@inertiajs/inertia-vue3";
+import { Head, Link, usePage } from "@inertiajs/inertia-vue3";
+import { CheckIcon } from "@heroicons/vue/outline";
 import VueHtmlToPaper from "vue-html-to-paper";
 import DashboardLayout from "@/Layouts/DashboardLayout.vue";
 import { TrashIcon } from "@heroicons/vue/outline";
@@ -21,7 +22,14 @@ moment.locale("id");
 
   <DashboardLayout title="Presensi Pegawai">
     <section
-      class="space-y-4 border-black/15 shadow-black/10 shadow-sm border-b px-8 pb-8">
+      class="
+        space-y-4
+        border-black/15
+        shadow-black/10 shadow-sm
+        border-b
+        px-8
+        pb-8
+      ">
       <h1 class="font-sans text-xl font-semibold text-gray-700">
         Presensi Pegawai hari ini,
         <span class="text-blue-600">{{
@@ -36,7 +44,11 @@ moment.locale("id");
               <th
                 scope="col"
                 rowspan="2"
-                class="!static font-semibold border-b-0 border-r border-black/10">
+                class="
+                  !static
+                  font-semibold
+                  border-b-0 border-r border-black/10
+                ">
                 #
               </th>
               <th
@@ -88,14 +100,48 @@ moment.locale("id");
                 {{ getCheckInOutTime(staff.todayPresence, "checkOutTime") }}
               </td>
               <td>
-                <div class="flex flex-row justify-around">
-                  <!-- <button
-                    class="py-2 px-2 cursor-pointer rounded-md shadow-md"
+                <div
+                  v-if="
+                    staff.todayPresence != null &&
+                    staff.todayPresence.isVerified == false
+                  "
+                  class="flex flex-row gap-x-1 justify-around">
+                  <button
+                    class="
+                      py-2
+                      px-2
+                      bg-green-500
+                      cursor-pointer
+                      rounded-md
+                      shadow-md
+                    "
                     @click="
-                      deleteRow('', staff.id, 'Hapus ' + staff.name + ' ?')
+                      swal(
+                        'verify',
+                        staff.todayPresence.id,
+                        'Verifikasi presensi ' + staff.name + ' ?'
+                      )
                     ">
-                    <TrashIcon class="h-5 w-5 text-red-500" />
-                  </button> -->
+                    <CheckIcon class="h-5 w-5 text-white" />
+                  </button>
+                  <button
+                    class="
+                      py-2
+                      px-2
+                      bg-red-500
+                      cursor-pointer
+                      rounded-md
+                      shadow-md
+                    "
+                    @click="
+                      swal(
+                        'delete',
+                        staff.todayPresence.id,
+                        'Hapus presensi ' + staff.name + ' ?'
+                      )
+                    ">
+                    <TrashIcon class="h-5 w-5 text-white" />
+                  </button>
                 </div>
               </td>
             </tr>
@@ -132,7 +178,19 @@ export default {
         return "Lapangan";
       }
     },
-    deleteRow(routes, id, title, subtitle, successTitle, successSubtitle) {
+    swal(type, id, title, subtitle) {
+      function onFinish(type) {
+        Swal.fire({
+          title: "Berhasil",
+          text: `Data presensi pegawai ${
+            type == "delete" ? "dihapus" : "diverifikasi"
+          }`,
+          icon: "success",
+          closeOnClickOutside: false,
+        }).then((result) => {
+          window.location.reload();
+        });
+      }
       Swal.fire({
         title: title ?? "Title",
         text: subtitle ?? "",
@@ -148,7 +206,19 @@ export default {
         cancelButtonText: "Batal",
       }).then((result) => {
         if (result.isConfirmed) {
-          this.$inertia.delete("/staffs/" + id, {});
+          if (type == "delete") {
+            this.$inertia.delete("/presences/" + id, {
+              onSuccess: () => onFinish(type),
+            });
+          } else {
+            this.$inertia.put(
+              "/presences/" + id,
+              {},
+              {
+                onSuccess: () => onFinish(type),
+              }
+            );
+          }
         }
       });
     },

@@ -76,14 +76,28 @@ const user = usePage().props.value.auth.user;
                     v-if="user.roles[0].level <= staff.roles[0].level"
                     class="flex flex-row gap-x-1 ustify-around">
                     <Link
-                      class="py-2 px-2 bg-gray-500 cursor-pointer rounded-md shadow-md"
+                      class="
+                        py-2
+                        px-2
+                        bg-gray-500
+                        cursor-pointer
+                        rounded-md
+                        shadow-md
+                      "
                       :href="route('staffs.edit', staff.id)">
                       <PencilIcon class="h-5 w-5 text-white" />
                     </Link>
                     <button
-                      class="py-2 px-2 bg-red-500 cursor-pointer rounded-md shadow-md"
+                      class="
+                        py-2
+                        px-2
+                        bg-red-500
+                        cursor-pointer
+                        rounded-md
+                        shadow-md
+                      "
                       @click="
-                        deleteRow('', staff.id, 'Hapus ' + staff.name + ' ?')
+                        deleteRow(staff.id, 'Hapus ' + staff.name + ' ?')
                       ">
                       <TrashIcon class="h-5 w-5 text-white" />
                     </button>
@@ -117,7 +131,7 @@ export default {
       });
       this.filteredStaffs = filtered;
     },
-    deleteRow(routes, id, title, subtitle, successTitle, successSubtitle) {
+    deleteRow(id, title, subtitle) {
       Swal.fire({
         title: title ?? "Title",
         text: subtitle ?? "",
@@ -137,7 +151,7 @@ export default {
             onFinish: () => {
               Swal.fire({
                 title: "Berhasil",
-                text: "Data pegawai ditambahkan",
+                text: "Data pegawai dihapus",
                 icon: "success",
                 closeOnClickOutside: false,
               }).then((result) => {

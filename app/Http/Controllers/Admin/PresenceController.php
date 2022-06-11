@@ -8,7 +8,9 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Response;
 
 class PresenceController extends Controller
 {
@@ -19,8 +21,16 @@ class PresenceController extends Controller
    */
   public function index()
   {
+    $today = Carbon::now('+7');
+    // Verify all presence berfore today, if exist
+    $allPresences = Presence::whereDate('checkInTime', '<', $today)->where('isVerified', false)->get();
+    foreach ($allPresences as $presence) {
+      $presence->isVerified = true;
+      $presence->save();
+    }
+
+
     // TODO csdad
-    $today = Carbon::now();
     $rawStaffs = User::with('roles')->get();
     $presences = [];
     // Filter staff
@@ -93,7 +103,10 @@ class PresenceController extends Controller
    */
   public function update(Request $request, Presence $presence)
   {
-    //
+
+    $presence->isVerified = true;
+    $presence->save();
+    return redirect()->back();
   }
 
   /**
@@ -104,6 +117,7 @@ class PresenceController extends Controller
    */
   public function destroy(Presence $presence)
   {
-    //
+    $presence->delete();
+    return redirect()->back();
   }
 }

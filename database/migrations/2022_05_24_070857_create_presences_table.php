@@ -22,6 +22,7 @@ return new class extends Migration
       $table->timestamp('checkOutTime')->nullable();
       $table->double('checkInDistance');
       $table->double('checkOutDistance')->nullable();
+      $table->boolean('isVerified')->default(false);
       $table->timestamps();
       $table->foreignId('user_id')->constrained('users');
     });

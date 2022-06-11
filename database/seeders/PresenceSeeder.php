@@ -15,8 +15,27 @@ class PresenceSeeder extends Seeder
    */
   public function run()
   {
+    // today
+    for ($user = 1; $user < 9; $user++) {
+      Presence::create([
+        'inArea' => false,
+        'checkInDistance' => 20230,
+        'checkInLocation' => json_encode([
+          'longitude' => 0.5003650855,
+          'latitude' =>  101.38777053,
+        ]),
+        'checkOutLocation' => json_encode([
+          'longitude' => 0.5003650855,
+          'latitude' =>  101.38777053,
+        ]),
+        'checkInTime' => now('+7'),
+        'checkOutTime' => now('+7')->addHours(4),
+        'user_id' => $user,
+      ]);
+    }
+
     for ($i = 1; $i < 4; $i++) {
-      for ($j = 6; $j > -1; $j--) {
+      for ($j = 6; $j > 0; $j--) {
         Presence::create([
           'inArea' => false,
           'checkInDistance' => 20230,
@@ -72,7 +91,5 @@ class PresenceSeeder extends Seeder
         ]);
       }
     }
-
-    
   }
 }
