@@ -5,7 +5,7 @@ import { Head, Link, usePage } from "@inertiajs/inertia-vue3";
 import { CheckIcon } from "@heroicons/vue/outline";
 import VueHtmlToPaper from "vue-html-to-paper";
 import DashboardLayout from "@/Layouts/DashboardLayout.vue";
-import { TrashIcon } from "@heroicons/vue/outline";
+import { TrashIcon, EyeIcon } from "@heroicons/vue/outline";
 import DeleteButton from "@/Components/DeleteButton.vue";
 import NavLink from "@/Components/NavLink.vue";
 import { computed } from "vue";
@@ -103,10 +103,29 @@ moment.locale("id");
                 <div
                   v-if="
                     staff.todayPresence != null &&
-                    staff.todayPresence.isVerified == false
+                    staff.todayPresence.inArea == false
                   "
                   class="flex flex-row gap-x-1 justify-around">
+                  <a
+                    :href="
+                      'http://www.google.com/maps/place/' +
+                      JSON.parse(staff.todayPresence.checkInLocation).latitude +
+                      ',' +
+                      JSON.parse(staff.todayPresence.checkInLocation).longitude
+                    "
+                    target="_blank"
+                    class="
+                      py-2
+                      px-2
+                      bg-gray-500
+                      cursor-pointer
+                      rounded-md
+                      shadow-md
+                    ">
+                    <EyeIcon class="h-5 w-5 text-white" />
+                  </a>
                   <button
+                    v-if="staff.todayPresence.isVerified == false"
                     class="
                       py-2
                       px-2
@@ -125,6 +144,7 @@ moment.locale("id");
                     <CheckIcon class="h-5 w-5 text-white" />
                   </button>
                   <button
+                    v-if="staff.todayPresence.isVerified == false"
                     class="
                       py-2
                       px-2
