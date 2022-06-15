@@ -13,6 +13,8 @@ class Presence extends Model
     'inArea' => 'boolean',
     'checkInTime' => 'datetime',
     'checkOutTime' => 'datetime',
+    'checkInDistance' => 'string',
+    'checkOutDistance' => 'string',
   ];
 
   public function user()
@@ -26,4 +28,5 @@ class Presence extends Model
   //   $
 
   // }
+
 }

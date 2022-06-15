@@ -11,15 +11,15 @@ const mix = require("laravel-mix");
  |
  */
 
-// mix.browserSync("127.0.0.1:8001");
+mix.browserSync("127.0.0.1:8000");
 mix.disableSuccessNotifications();
 mix.disableNotifications();
-mix.options({
-  hmrOptions: {
-    host: "localhost",
-    port: "8000",
-  },
-});
+// mix.options({
+//   hmrOptions: {
+//     host: "localhost",
+//     port: "8000",
+//   },
+// });
 mix
   .js("resources/js/app.js", "public/js")
   .vue()

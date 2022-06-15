@@ -78,10 +78,14 @@ class ApiPresenceController extends Controller
 
   public function store(Request $request)
   {
+    $maximumAreaDistance = 200000;
     $presenceData['checkInTime'] = now('+7');
     $presenceData['user_id'] = auth()->user()->id;
     $presenceData['inArea'] = $request->inArea;
     $presenceData['checkInDistance'] = $request->distance;
+    if ($presenceData['checkInDistance'] < $maximumAreaDistance) {
+      $presenceData['isVerified'] = true;
+    }
     $presenceData['checkInLocation'] = json_encode($request->location);
     $todayPresence = Presence::create($presenceData);
     return response()->json([

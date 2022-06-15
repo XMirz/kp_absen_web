@@ -22,14 +22,7 @@ moment.locale("id");
 
   <DashboardLayout title="Presensi Pegawai">
     <section
-      class="
-        space-y-4
-        border-black/15
-        shadow-black/10 shadow-sm
-        border-b
-        px-8
-        pb-8
-      ">
+      class="space-y-4 border-black/15 shadow-black/10 shadow-sm border-b px-8 pb-8">
       <h1 class="font-sans text-xl font-semibold text-gray-700">
         Presensi Pegawai hari ini,
         <span class="text-blue-600">{{
@@ -44,11 +37,7 @@ moment.locale("id");
               <th
                 scope="col"
                 rowspan="2"
-                class="
-                  !static
-                  font-semibold
-                  border-b-0 border-r border-black/10
-                ">
+                class="!static font-semibold border-b-0 border-r border-black/10">
                 #
               </th>
               <th
@@ -114,26 +103,12 @@ moment.locale("id");
                       JSON.parse(staff.todayPresence.checkInLocation).longitude
                     "
                     target="_blank"
-                    class="
-                      py-2
-                      px-2
-                      bg-gray-500
-                      cursor-pointer
-                      rounded-md
-                      shadow-md
-                    ">
+                    class="py-2 px-2 bg-gray-500 cursor-pointer rounded-md shadow-md">
                     <EyeIcon class="h-5 w-5 text-white" />
                   </a>
                   <button
                     v-if="staff.todayPresence.isVerified == false"
-                    class="
-                      py-2
-                      px-2
-                      bg-green-500
-                      cursor-pointer
-                      rounded-md
-                      shadow-md
-                    "
+                    class="py-2 px-2 bg-green-500 cursor-pointer rounded-md shadow-md"
                     @click="
                       swal(
                         'verify',
@@ -145,14 +120,7 @@ moment.locale("id");
                   </button>
                   <button
                     v-if="staff.todayPresence.isVerified == false"
-                    class="
-                      py-2
-                      px-2
-                      bg-red-500
-                      cursor-pointer
-                      rounded-md
-                      shadow-md
-                    "
+                    class="py-2 px-2 bg-red-500 cursor-pointer rounded-md shadow-md"
                     @click="
                       swal(
                         'delete',
@@ -183,7 +151,7 @@ export default {
       if (presence[time] == null) {
         return "-";
       } else {
-        return moment(presence[time]).format("HH:mm");
+        return moment(presence[time]).subtract(7, "hours").format("HH:mm");
       }
     },
     // Function to chceck and return status string;

@@ -20,6 +20,7 @@ class PresenceSeeder extends Seeder
       Presence::create([
         'inArea' => false,
         'checkInDistance' => 20230,
+        'checkOutDistance' => 20230,
         'checkInLocation' => json_encode([
           'latitude' => 0.5003650855,
           'longitude' =>  101.38777053,
@@ -39,6 +40,7 @@ class PresenceSeeder extends Seeder
         Presence::create([
           'inArea' => false,
           'checkInDistance' => 20230,
+          'checkOutDistance' => 20230,
           'checkInLocation' => json_encode([
             'latitude' => 0.5003650855,
             'longitude' =>  101.38777053,
@@ -58,6 +60,7 @@ class PresenceSeeder extends Seeder
         Presence::create([
           'inArea' => false,
           'checkInDistance' => 20230,
+          'checkOutDistance' => 20230,
           'checkInLocation' => json_encode([
             'latitude' => 0.5003650855,
             'longitude' =>  101.38777053,
@@ -77,6 +80,7 @@ class PresenceSeeder extends Seeder
         Presence::create([
           'inArea' => false,
           'checkInDistance' => 20230,
+          'checkOutDistance' => 20230,
           'checkInLocation' => json_encode([
             'latitude' => 0.5003650855,
             'longitude' =>  101.38777053,

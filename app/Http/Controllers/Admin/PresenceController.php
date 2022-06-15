@@ -29,7 +29,6 @@ class PresenceController extends Controller
       $presence->save();
     }
 
-
     // TODO csdad
     $rawStaffs = User::with('roles')->get();
     $presences = [];
