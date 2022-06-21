@@ -5,7 +5,7 @@ import { createInertiaApp } from "@inertiajs/inertia-vue3";
 import { InertiaProgress } from "@inertiajs/progress";
 
 const appName =
-  window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
+  window.document.getElementsByTagName("title")[0]?.innerText || "Prokopim";
 
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,

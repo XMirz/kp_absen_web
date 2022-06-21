@@ -20,11 +20,11 @@ class UserSeeder extends Seeder
   public function run()
   {
     $staffs = [
-      [
-        'name' => 'XMirz',
-        'email' => 'xmirz@gmail.com',
-        'password' => Hash::make(1),
-      ],
+      // [
+      //   'name' => 'XMirz',
+      //   'email' => 'xmirz@gmail.com',
+      //   'password' => Hash::make(1),
+      // ],
       [
         'name' => 'Hafez Almirza',
         'email' => 'x@gmail.com',
@@ -70,9 +70,9 @@ class UserSeeder extends Seeder
       $s['address'] = 'Pekanbaru';
       $s['birthDate'] = now()->subCenturies(2);
       $staff = User::create($s);
-      if ($staff->id == 2 || $staff->id == 1) {
+      if ($staff->id == 1) {
         $staff->assignRole('chief');
-      } else if (in_array($staff->id, [3])) {
+      } else if (in_array($staff->id, [2])) {
         $staff->assignRole('admin');
       } else {
         $staff->assignRole('staff');

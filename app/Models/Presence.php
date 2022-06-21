@@ -10,7 +10,7 @@ class Presence extends Model
   use HasFactory;
   protected $guarded = ['id'];
   protected $casts = [
-    'inArea' => 'boolean',
+    // 'inArea' => 'boolean',
     'checkInTime' => 'datetime',
     'checkOutTime' => 'datetime',
     'checkInDistance' => 'string',

@@ -16,29 +16,29 @@ class PresenceSeeder extends Seeder
   public function run()
   {
     // today
-    for ($user = 1; $user < 9; $user++) {
-      Presence::create([
-        'inArea' => false,
-        'checkInDistance' => 20230,
-        'checkOutDistance' => 20230,
-        'checkInLocation' => json_encode([
-          'latitude' => 0.5003650855,
-          'longitude' =>  101.38777053,
-        ]),
-        'checkOutLocation' => json_encode([
-          'latitude' => 0.5003650855,
-          'longitude' =>  101.38777053,
-        ]),
-        'checkInTime' => now('+7'),
-        'checkOutTime' => now('+7')->addHours(4),
-        'user_id' => $user,
-      ]);
-    }
+    // for ($user = 1; $user < 9; $user++) {
+    //   Presence::create([
+    //     'type' => 'out',
+    //     'checkInDistance' => 20230,
+    //     'checkOutDistance' => 20230,
+    //     'checkInLocation' => json_encode([
+    //       'latitude' => 0.5003650855,
+    //       'longitude' =>  101.38777053,
+    //     ]),
+    //     'checkOutLocation' => json_encode([
+    //       'latitude' => 0.5003650855,
+    //       'longitude' =>  101.38777053,
+    //     ]),
+    //     'checkInTime' => now('+7'),
+    //     'checkOutTime' => now('+7')->addHours(4),
+    //     'user_id' => $user,
+    //   ]);
+    // }
 
     for ($i = 1; $i < 4; $i++) {
       for ($j = 6; $j > 0; $j--) {
         Presence::create([
-          'inArea' => false,
+          'type' => 'out',
           'checkInDistance' => 20230,
           'checkOutDistance' => 20230,
           'checkInLocation' => json_encode([
@@ -58,7 +58,7 @@ class PresenceSeeder extends Seeder
     for ($i = 1; $i < 4; $i++) {
       for ($j = 6; $j > -1; $j--) {
         Presence::create([
-          'inArea' => false,
+          'type' => 'out',
           'checkInDistance' => 20230,
           'checkOutDistance' => 20230,
           'checkInLocation' => json_encode([
@@ -78,7 +78,7 @@ class PresenceSeeder extends Seeder
     for ($i = 8; $i > 0; $i--) {
       for ($j = 6; $j > -1; $j--) {
         Presence::create([
-          'inArea' => false,
+          'type' => 'out',
           'checkInDistance' => 20230,
           'checkOutDistance' => 20230,
           'checkInLocation' => json_encode([

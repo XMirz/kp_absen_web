@@ -5,7 +5,7 @@ import { Head, Link, usePage } from "@inertiajs/inertia-vue3";
 import { CheckIcon } from "@heroicons/vue/outline";
 import VueHtmlToPaper from "vue-html-to-paper";
 import DashboardLayout from "@/Layouts/DashboardLayout.vue";
-import { TrashIcon, EyeIcon } from "@heroicons/vue/outline";
+import { TrashIcon, EyeIcon, CalendarIcon } from "@heroicons/vue/outline";
 import DeleteButton from "@/Components/DeleteButton.vue";
 import NavLink from "@/Components/NavLink.vue";
 import { computed } from "vue";
@@ -89,47 +89,56 @@ moment.locale("id");
                 {{ getCheckInOutTime(staff.todayPresence, "checkOutTime") }}
               </td>
               <td>
-                <div
-                  v-if="
-                    staff.todayPresence != null &&
-                    staff.todayPresence.inArea == false
-                  "
-                  class="flex flex-row gap-x-1 justify-around">
+                <div class="flex flex-row gap-x-1 justify-around">
                   <a
-                    :href="
-                      'http://www.google.com/maps/place/' +
-                      JSON.parse(staff.todayPresence.checkInLocation).latitude +
-                      ',' +
-                      JSON.parse(staff.todayPresence.checkInLocation).longitude
-                    "
+                    :href="route('presence.show', { user: staff.id })"
                     target="_blank"
-                    class="py-2 px-2 bg-gray-500 cursor-pointer rounded-md shadow-md">
-                    <EyeIcon class="h-5 w-5 text-white" />
+                    class="py-2 px-2 bg-amber-500 cursor-pointer rounded-md shadow-md">
+                    <CalendarIcon class="h-5 w-5 text-white" />
                   </a>
-                  <button
-                    v-if="staff.todayPresence.isVerified == false"
-                    class="py-2 px-2 bg-green-500 cursor-pointer rounded-md shadow-md"
-                    @click="
-                      swal(
-                        'verify',
-                        staff.todayPresence.id,
-                        'Verifikasi presensi ' + staff.name + ' ?'
-                      )
+                  <template
+                    v-if="
+                      staff.todayPresence != null &&
+                      staff.todayPresence.type != 'inArea'
                     ">
-                    <CheckIcon class="h-5 w-5 text-white" />
-                  </button>
-                  <button
-                    v-if="staff.todayPresence.isVerified == false"
-                    class="py-2 px-2 bg-red-500 cursor-pointer rounded-md shadow-md"
-                    @click="
-                      swal(
-                        'delete',
-                        staff.todayPresence.id,
-                        'Hapus presensi ' + staff.name + ' ?'
-                      )
-                    ">
-                    <TrashIcon class="h-5 w-5 text-white" />
-                  </button>
+                    <a
+                      :href="
+                        'http://www.google.com/maps/place/' +
+                        JSON.parse(staff.todayPresence.checkInLocation)
+                          .latitude +
+                        ',' +
+                        JSON.parse(staff.todayPresence.checkInLocation)
+                          .longitude
+                      "
+                      target="_blank"
+                      class="py-2 px-2 bg-gray-500 cursor-pointer rounded-md shadow-md">
+                      <EyeIcon class="h-5 w-5 text-white" />
+                    </a>
+                    <button
+                      v-if="staff.todayPresence.isVerified == false"
+                      class="py-2 px-2 bg-green-500 cursor-pointer rounded-md shadow-md"
+                      @click="
+                        swal(
+                          'verify',
+                          staff.todayPresence.id,
+                          'Verifikasi presensi ' + staff.name + ' ?'
+                        )
+                      ">
+                      <CheckIcon class="h-5 w-5 text-white" />
+                    </button>
+                    <button
+                      v-if="staff.todayPresence.isVerified == false"
+                      class="py-2 px-2 bg-red-500 cursor-pointer rounded-md shadow-md"
+                      @click="
+                        swal(
+                          'delete',
+                          staff.todayPresence.id,
+                          'Hapus presensi ' + staff.name + ' ?'
+                        )
+                      ">
+                      <TrashIcon class="h-5 w-5 text-white" />
+                    </button>
+                  </template>
                 </div>
               </td>
             </tr>
@@ -160,8 +169,12 @@ export default {
         return "Absen";
       } else if (presence.checkInTime == null) {
         return "Absen";
-      } else if (presence.inArea) {
+      } else if (presence.type == "inArea") {
         return "Kantor";
+      } else if (presence.type == "diseased") {
+        return "Sakit";
+      } else if (presence.type == "permit") {
+        return "Izin";
       } else {
         return "Lapangan";
       }

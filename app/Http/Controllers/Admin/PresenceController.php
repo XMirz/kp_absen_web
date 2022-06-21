@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Presence;
+use App\Models\Staff;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -42,64 +43,38 @@ class PresenceController extends Controller
       $staff->todayPresence = Presence::where('user_id', $staff->id)->whereDate('checkInTime', '=', now('+7')->format('Y-m-d'))->first();
     }
     $todayStaffsPresences = $staffs;
-
-
-
-
-
     return Inertia::render('Presence/Index', compact('todayStaffsPresences', 'today'));
   }
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function create()
-  {
-    //
-  }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
   public function store(Request $request)
   {
     //
   }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  \App\Models\Presence  $presence
-   * @return \Illuminate\Http\Response
-   */
-  public function show(Presence $presence)
+  public function show(User $user)
   {
-    //
+    $staff = $user;
+    $groupedAllPresences = Presence::where('user_id', $staff->id)->get()->groupBy([
+      function ($presence) {
+        return $presence->checkInTime->format('Y');
+      },
+      function ($presence) {
+        return $presence->checkInTime->translatedFormat('m');
+      },
+    ]);
+    $reportYearsMonths = [];
+    foreach ($groupedAllPresences as $year => $yearValue) {
+      $years = [];
+      foreach ($yearValue as $monthNumber => $value) {
+        $monthName = Carbon::createFromFormat('Y-m-d', '2022-' . $monthNumber . '-01')->translatedFormat('F');
+        $years[$monthNumber] = $monthName;
+      }
+      $reportYearsMonths[$year] = $years;
+    }
+    return Inertia::render('Presence/Show', compact('staff', 'reportYearsMonths'));
   }
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  \App\Models\Presence  $presence
-   * @return \Illuminate\Http\Response
-   */
-  public function edit(Presence $presence)
-  {
-    //
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  \App\Models\Presence  $presence
-   * @return \Illuminate\Http\Response
-   */
   public function update(Request $request, Presence $presence)
   {
 
@@ -108,12 +83,7 @@ class PresenceController extends Controller
     return redirect()->back();
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  \App\Models\Presence  $presence
-   * @return \Illuminate\Http\Response
-   */
+
   public function destroy(Presence $presence)
   {
     $presence->delete();

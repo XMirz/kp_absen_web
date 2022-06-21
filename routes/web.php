@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PresenceController;
 use App\Http\Controllers\Admin\PrintReportController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Api\ApiPresenceController;
+use App\Models\Presence;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -43,8 +44,9 @@ Route::group(['middleware' => ['auth', 'role:dev|admin|chief']], function () {
   Route::group(['prefix' => '/settings'],  function () {
     Route::get('/', [SettingController::class, 'index'])->name('settings.index');
   });
-
+  Route::get('/staff-presence/{user}', [PresenceController::class, 'show'])->name('presence.show');
   // Ajax Route
   Route::get('/presence', [ApiPresenceController::class, 'index']);
+  Route::get('/presence/{user}', [ApiPresenceController::class, 'show']);
 });
 require __DIR__ . '/auth.php';

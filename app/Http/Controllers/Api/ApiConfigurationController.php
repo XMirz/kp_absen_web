@@ -19,14 +19,15 @@ class ApiConfigurationController extends Controller
     $todayPresence = Presence::where('user_id', $userId)->whereDate('checkInTime', $today)->latest()->first();
     // Check presence eligibility
     // Check if current time beetween 8 and lessthan 16
-    $eligibleHours =  intval($today->translatedFormat('H')) > 6 && intval($today->translatedFormat('H')) < 23;
+    $eligibleHours =  intval($today->translatedFormat('H')) > -1 && intval($today->translatedFormat('H')) < 23;
 
     // Check if the day is holiday 
     $eligibleDay = !$this->isHoliday($today) && !in_array($today->translatedFormat('l'), ['Sabtu', 'Minggu']);
     if ($todayPresence == null) {
       $eligiblePresence = true;
     } else {
-      $eligiblePresence = $todayPresence->checkOutTime != null ? false : true;
+      $isPresent = $todayPresence->type == 'inArea' || $todayPresence->type == 'out';
+      $eligiblePresence = $todayPresence->checkOutTime == null && $isPresent ? true : false;
     }
     $eligible = $eligibleDay && $eligiblePresence && $eligibleHours;
     $config = Configuration::all();

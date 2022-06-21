@@ -15,14 +15,15 @@ return new class extends Migration
   {
     Schema::create('presences', function (Blueprint $table) {
       $table->id();
-      $table->boolean('inArea');
+      $table->enum('type', ['inArea', 'out', 'permit', 'diseased']);
       $table->string('checkInLocation');
       $table->string('checkOutLocation')->nullable();
       $table->timestamp('checkInTime')->nullable();
       $table->timestamp('checkOutTime')->nullable();
-      $table->double('checkInDistance');
+      $table->double('checkInDistance')->nullable();
       $table->double('checkOutDistance')->nullable();
       $table->boolean('isVerified')->default(false);
+      $table->string('description')->nullable();
       $table->timestamps();
       $table->foreignId('user_id')->constrained('users');
     });
